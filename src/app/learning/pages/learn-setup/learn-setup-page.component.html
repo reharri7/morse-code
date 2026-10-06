@@ -1,0 +1,63 @@
+<main class="learn-page narrow">
+  <div class="page-header">
+    <a class="back-link" routerLink="/learn">← Learning home</a>
+    <div><p class="eyebrow">Practice setup</p><h1>Choose your pace</h1></div>
+  </div>
+  <p class="lead">Keep the character rhythm intact, then use effective speed to give yourself more room between sounds.</p>
+
+  <section class="panel">
+    <div class="settings-grid">
+      <div class="field">
+        <label for="character-wpm">Character speed</label>
+        <input id="character-wpm" type="number" min="12" max="40" step="1" [(ngModel)]="characterWpm" />
+        <small>The rhythm inside each character. Start at 20 WPM.</small>
+      </div>
+      <div class="field">
+        <label for="effective-wpm">Effective speed</label>
+        <input id="effective-wpm" type="number" min="5" [max]="characterWpm" step="1" [(ngModel)]="effectiveWpm" />
+        <small>More space between characters without slowing their rhythm.</small>
+      </div>
+      <div class="field">
+        <label for="tone-frequency">Tone pitch</label>
+        <input id="tone-frequency" type="number" min="300" max="1000" step="10" [(ngModel)]="toneFrequencyHz" />
+        <small>600 Hz is a neutral starting point.</small>
+      </div>
+      <div class="field">
+        <label for="session-length">Session length</label>
+        <select id="session-length" [(ngModel)]="sessionLength">
+          <option [ngValue]="20">20 characters</option>
+          <option [ngValue]="40">40 characters</option>
+          <option [ngValue]="60">60 characters</option>
+        </select>
+        <small>Progress is saved after every answer.</small>
+      </div>
+      <div class="field">
+        <label for="review-level">Characters to practice</label>
+        <select id="review-level" [(ngModel)]="reviewSymbolCount">
+          <option *ngFor="let level of reviewLevels" [ngValue]="level.count">{{ level.label }}</option>
+        </select>
+        <small>Review does not change your unlocked set.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Sound check and introduction</p>
+    <h2>Hear your newest characters</h2>
+    <p>Listen once before starting. Patterns stay hidden during practice.</p>
+    <div class="intro-grid">
+      <article class="symbol-card" *ngFor="let symbol of introductionSymbols">
+        <span class="symbol">{{ symbol }}</span>
+        <div><strong>{{ symbol }}</strong><br /><code>{{ pattern(symbol) }}</code></div>
+        <button type="button" (click)="hear(symbol)" [disabled]="!audioSupported">Hear {{ symbol }}</button>
+      </article>
+    </div>
+    <p class="status-line" aria-live="polite">{{ introStatus }}</p>
+  </section>
+
+  <div class="button-row">
+    <button class="primary" type="button" (click)="startPractice()" [disabled]="starting || !audioSupported">{{ starting ? 'Starting…' : 'Start practice' }}</button>
+    <a class="button" routerLink="/learn">Cancel</a>
+  </div>
+  <p class="error" *ngIf="!audioSupported">This browser cannot generate practice audio.</p>
+</main>

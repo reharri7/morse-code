@@ -1,0 +1,44 @@
+<main class="learn-page narrow">
+  <div class="page-header"><a class="back-link" routerLink="/learn">← Learning home</a><div><p class="eyebrow">Simulated radio practice</p><h1>{{ mode === 'callsigns' ? 'Copy callsigns' : mode === 'contest' ? 'Copy contest exchanges' : 'Follow a CW QSO' }}</h1></div></div>
+  <p class="lead">Generated radio-format exercises—not real stations or contacts.</p>
+
+  <section class="panel" *ngIf="snapshot.state === 'idle'">
+    <h2>{{ mode === 'qso' ? 'A six-turn scripted contact' : 'Ten answer-hidden sounds' }}</h2>
+    <p *ngIf="mode === 'callsigns'">Each callsign uses only letters and numbers you have unlocked.</p>
+    <p *ngIf="mode === 'contest'">Each exchange contains a simulated callsign, an RST value, and a three-digit serial.</p>
+    <p *ngIf="mode === 'qso'">Copy deterministic CQ, answer, report, name, QTH, and sign-off turns. Explanations appear only after you submit.</p>
+    <button class="primary" type="button" (click)="start()">Start simulated practice</button>
+  </section>
+
+  <section class="practice-stage" *ngIf="snapshot.state === 'playing'">
+    <div class="listen-mark playing" aria-hidden="true">·−</div><p class="eyebrow">Listen</p><h1>{{ snapshot.currentTrial?.label }}</h1><p>{{ snapshot.trialNumber }} of {{ snapshot.totalTrials }}</p>
+  </section>
+
+  <section class="practice-stage" *ngIf="snapshot.state === 'answering'">
+    <div class="listen-mark" aria-hidden="true">·−</div><p class="eyebrow">Your turn</p><h1>Type the complete copy</h1>
+    <p>{{ snapshot.currentTrial?.label }} · {{ snapshot.trialNumber }} of {{ snapshot.totalTrials }}</p>
+    <div class="answer-panel"><form (ngSubmit)="submit()"><label for="radio-answer">Your copy</label><div class="answer-row"><input id="radio-answer" name="radioAnswer" autocomplete="off" [(ngModel)]="answer" /><button class="primary" type="submit">Check copy</button></div></form><div class="button-row"><button type="button" (click)="replay()">Replay sound</button></div></div>
+  </section>
+
+  <section class="practice-stage" *ngIf="snapshot.state === 'feedback' && snapshot.feedback as feedback">
+    <p class="eyebrow">Post-turn truth</p><h1>{{ feedback.score.correct ? 'Exact copy' : feedback.score.characterErrors + ' character ' + (feedback.score.characterErrors === 1 ? 'difference' : 'differences') }}</h1>
+    <div class="feedback-panel" [class.correct]="feedback.score.correct" [class.incorrect]="!feedback.score.correct">
+      <p>{{ feedback.trial.label }}</p><div class="feedback-symbol"><strong>{{ feedback.trial.displayText }}</strong></div>
+      <p>Your copy: <strong>{{ feedback.enteredText || '—' }}</strong></p><p>{{ feedback.trial.explanation }}</p>
+      <button class="primary" type="button" (click)="next()">{{ snapshot.trialNumber >= snapshot.totalTrials ? 'Show transcript' : 'Next turn' }}</button>
+    </div>
+  </section>
+
+  <section class="panel" *ngIf="snapshot.state === 'complete'">
+    <p class="eyebrow">Simulated session complete</p><h1>{{ snapshot.exactTrials }} / {{ snapshot.totalTrials }} exact</h1>
+    <div class="progress-table" role="table" aria-label="Post-session transcript">
+      <div role="row" *ngFor="let record of snapshot.transcript"><p><strong>{{ record.trial.label }}</strong></p><p>Expected: {{ record.trial.displayText }}</p><p>Your copy: {{ record.enteredText || '—' }}</p><p>{{ record.trial.explanation }}</p></div>
+    </div>
+    <div class="button-row"><button class="primary" type="button" (click)="start()">Practice again</button><a class="button" routerLink="/learn">Learning home</a></div>
+  </section>
+
+  <section class="notice" *ngIf="snapshot.state === 'error'"><h2>Radio practice is not ready</h2><p class="error">{{ snapshot.errorMessage }}</p><div class="button-row"><a class="button primary" routerLink="/learn/setup">Continue character learning</a><a class="button" routerLink="/learn/copy" [queryParams]="{ mode: 'groups' }">Use random groups</a></div></section>
+
+  <details class="panel"><summary>Procedural-signal notation</summary><p *ngFor="let token of tokenConventions"><strong>{{ token.display }}</strong> uses <code>{{ token.audioSymbol }}</code>: {{ token.meaning }}.</p></details>
+  <p class="storage-warning" *ngIf="!snapshot.storageWriteSucceeded">Practice can continue, but character evidence could not be saved.</p>
+</main>

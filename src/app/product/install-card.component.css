@@ -1,0 +1,17 @@
+:host { display: block; margin-top: 1rem; }
+* { box-sizing: border-box; }
+.install-card { align-items: center; border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); color: var(--ink); display: grid; gap: 1rem; grid-template-columns: auto 1fr auto; padding: 1.2rem 0; }
+.install-icon { color: var(--signal); font: 700 .72rem ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; width: 34px; }
+.eyebrow { color: var(--signal); font-size: .67rem; font-weight: 700; letter-spacing: .1em; margin: 0; text-transform: uppercase; }
+h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -.02em; margin: .2rem 0 0; }
+p:last-child { color: var(--muted); font-size: .75rem; line-height: 1.5; margin: .2rem 0 0; }
+.install-actions { align-items: center; display: flex; gap: .7rem; }
+.install-actions > span { color: var(--quiet); font-size: .7rem; }
+.install-actions i { display: none; }
+.install-actions > span.offline { color: #a7bca6; }
+button { background: var(--signal); border: 1px solid var(--signal); border-radius: 4px; color: var(--signal-ink); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 650; padding: .68rem .9rem; white-space: nowrap; }
+button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+@media (max-width: 620px) {
+  .install-card { align-items: start; grid-template-columns: auto 1fr; }
+  .install-actions { align-items: flex-start; flex-direction: column; grid-column: 2; }
+}

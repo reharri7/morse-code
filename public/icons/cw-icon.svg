@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CW Transcriber">
+  <rect width="512" height="512" fill="#101b17"/>
+  <path d="M72 344h56v-64h40v64h104v-64h40v64h128" fill="none" stroke="#b6f36b" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="108" cy="224" r="20" fill="#b6f36b"/>
+  <rect x="158" y="204" width="92" height="40" rx="20" fill="#b6f36b"/>
+  <circle cx="300" cy="224" r="20" fill="#b6f36b"/>
+  <rect x="350" y="204" width="92" height="40" rx="20" fill="#b6f36b"/>
+  <text x="256" y="142" text-anchor="middle" fill="#edf5f1" font-family="system-ui, sans-serif" font-size="84" font-weight="800" letter-spacing="-7">CW</text>
+</svg>

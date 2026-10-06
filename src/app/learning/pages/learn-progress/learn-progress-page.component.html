@@ -1,0 +1,19 @@
+<main class="learn-page">
+  <div class="page-header"><a class="back-link" routerLink="/learn">← Learning home</a><div><p class="eyebrow">Persistent progress</p><h1>Character by character</h1></div></div>
+  <p class="lead">Accuracy, replays, and recognition time across your unlocked characters.</p>
+  <section class="panel">
+    <table class="progress-table">
+      <thead><tr><th scope="col">Character</th><th scope="col">Accuracy</th><th scope="col">Attempts</th><th scope="col">Replays</th><th scope="col">Mean recognition</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let item of statistics">
+          <td>{{ item.symbolId }}</td>
+          <td>{{ accuracy(item) === null ? 'No attempts' : (accuracy(item) | percent:'1.0-0') }}</td>
+          <td>{{ item.attempts }}</td>
+          <td>{{ item.replayCount }}</td>
+          <td>{{ meanLatency(item) === null ? '—' : ((meanLatency(item)! / 1000 | number:'1.1-1') + ' s') }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <div class="button-row"><a class="button primary" routerLink="/learn/setup">Start practice</a><a class="button" routerLink="/learn">Back to learning</a></div>
+</main>

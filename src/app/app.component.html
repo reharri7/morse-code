@@ -1,0 +1,14 @@
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<header class="app-bar">
+  <a class="app-mark" routerLink="/transcribe" aria-label="CW Transcriber home">
+    <span aria-hidden="true">CW</span>
+    <strong>CW Transcriber</strong>
+  </a>
+  <nav aria-label="Main navigation">
+    <a routerLink="/transcribe" routerLinkActive="active">Receive</a>
+    <a routerLink="/learn" routerLinkActive="active">Practice</a>
+  </nav>
+</header>
+<div id="main-content" tabindex="-1">
+  <router-outlet></router-outlet>
+</div>

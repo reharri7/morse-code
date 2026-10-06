@@ -1,0 +1,60 @@
+:root {
+  color-scheme: dark;
+  --page: #111310;
+  --surface: #171a16;
+  --surface-deep: #0d0f0d;
+  --ink: #e8e5dc;
+  --muted: #aaa99f;
+  --quiet: #777b74;
+  --line: #333831;
+  --line-strong: #4a5047;
+  --signal: #d2aa68;
+  --signal-strong: #e2bd7e;
+  --signal-ink: #231b10;
+  --good: #8ea98e;
+  --warn: #d4a460;
+  --bad: #c77d6c;
+}
+
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+button, input, select, textarea { font: inherit; }
+
+app-transcription-page .operator-tools { margin-top: 1rem; }
+app-transcription-page .tools-heading { align-items: end; display: flex; gap: 1rem; justify-content: space-between; padding: .3rem .15rem .85rem; }
+app-transcription-page .tools-heading h2 { margin-top: .22rem; }
+app-transcription-page .tools-heading > p { font-size: .76rem; margin: 0; max-width: 390px; text-align: right; }
+app-transcription-page .tool-list { display: grid; gap: .65rem; grid-template-columns: 1fr 1fr; }
+app-transcription-page .operator-tool { min-width: 0; }
+app-transcription-page .operator-tool[open] { grid-column: 1 / -1; }
+app-transcription-page .operator-tool > summary { align-items: center; background: color-mix(in srgb, var(--surface) 96%, transparent); border: 1px solid var(--line); border-radius: 6px; color: var(--ink); cursor: pointer; display: flex; min-height: 66px; padding: .85rem 1rem; }
+app-transcription-page .operator-tool > summary:hover { border-color: var(--line-strong); }
+app-transcription-page .operator-tool[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+app-transcription-page .operator-tool > summary > span { display: inline-flex; flex-direction: column; gap: .2rem; margin-left: .35rem; }
+app-transcription-page .operator-tool > summary strong { font-size: .86rem; }
+app-transcription-page .operator-tool > summary small { color: var(--quiet); font-size: .7rem; font-weight: 500; }
+app-transcription-page .operator-tool > app-live-copy,
+app-transcription-page .operator-tool > app-session-tools,
+app-transcription-page .operator-tool > app-verification,
+app-transcription-page .operator-tool > app-install-card { display: block; margin: 0; }
+app-transcription-page .operator-tool > app-live-copy,
+app-transcription-page .operator-tool > app-session-tools,
+app-transcription-page .operator-tool > app-verification,
+app-transcription-page .operator-tool > app-install-card,
+app-transcription-page .tool-body { border: 1px solid var(--line); border-top: 0; padding: .75rem; }
+app-transcription-page .tool-body { background: var(--surface-deep); }
+app-transcription-page .tool-body .timeline-panel { margin-top: 0; }
+
+@media (max-width: 620px) {
+  app-transcription-page .tools-heading { align-items: start; }
+  app-transcription-page .tools-heading > p { display: none; }
+  app-transcription-page .tool-list { grid-template-columns: 1fr; }
+  app-transcription-page .operator-tool[open] { grid-column: auto; }
+}

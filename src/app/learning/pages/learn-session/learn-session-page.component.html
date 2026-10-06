@@ -1,0 +1,67 @@
+<main class="learn-page narrow">
+  <div class="practice-head">
+    <a class="back-link" routerLink="/learn">← Leave practice</a>
+    <span *ngIf="snapshot.totalTrials">{{ snapshot.trialNumber }} of {{ snapshot.totalTrials }}</span>
+  </div>
+  <div class="progress-track" aria-hidden="true"><span [style.width.%]="progressPercent"></span></div>
+  <p class="sr-only" aria-live="assertive" aria-atomic="true">{{ announcement }}</p>
+
+  <section class="practice-stage" *ngIf="snapshot.state !== 'idle'; else noSession">
+    <div class="listen-mark" [class.playing]="snapshot.state === 'playing'" aria-hidden="true">·−</div>
+
+    <ng-container *ngIf="snapshot.state === 'preparing' || snapshot.state === 'playing'">
+      <p class="eyebrow">Listen</p>
+      <h1>{{ snapshot.state === 'preparing' ? 'Getting the sound ready…' : 'Listen to the rhythm' }}</h1>
+      <p>{{ snapshot.trialNumber }} of {{ snapshot.totalTrials }}</p>
+      <button type="button" (click)="pause()">Pause</button>
+    </ng-container>
+
+    <ng-container *ngIf="snapshot.state === 'awaiting-answer'">
+      <p class="eyebrow">Your turn</p>
+      <h1>What character did you hear?</h1>
+      <div class="answer-panel">
+        <form (ngSubmit)="submitTypedAnswer()">
+          <label for="practice-answer">Type one letter or number</label>
+          <div class="answer-row">
+            <input #answerInput id="practice-answer" name="answer" maxlength="1" autocomplete="off" autocapitalize="characters" [ngModel]="typedAnswer" (ngModelChange)="onTypedAnswerChange($event)" />
+            <button class="primary" type="submit">Check answer</button>
+          </div>
+        </form>
+        <p class="error" aria-live="polite" *ngIf="inputMessage">{{ inputMessage }}</p>
+        <div class="button-row">
+          <button type="button" (click)="replay()">Replay sound</button>
+          <button type="button" (click)="pause()">Pause</button>
+        </div>
+        <p>Type to answer · Space to replay</p>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="snapshot.state === 'showing-feedback' && snapshot.feedback as feedback">
+      <p class="eyebrow">Immediate feedback</p>
+      <h1>{{ feedback.correct ? 'Correct' : 'Not quite' }}</h1>
+      <div class="feedback-panel" [class.correct]="feedback.correct" [class.incorrect]="!feedback.correct">
+        <p>You heard:</p>
+        <div class="feedback-symbol"><strong>{{ feedback.expectedSymbolId }}</strong><code>{{ feedbackPattern }}</code></div>
+        <p *ngIf="!feedback.correct">Your answer was <strong>{{ feedback.enteredSymbolId }}</strong>.</p>
+        <p *ngIf="feedback.replayCount">Replay-assisted; excluded from unlocking.</p>
+        <p *ngIf="!feedback.replayCount && feedback.recognitionLatencyMs !== null">Recognized in {{ feedback.recognitionLatencyMs / 1000 | number:'1.1-1' }} seconds.</p>
+        <div class="button-row"><button #nextButton class="primary" type="button" (click)="nextTrial()">{{ snapshot.attempts.length >= snapshot.totalTrials ? 'See results' : 'Next sound' }}</button><button type="button" (click)="pause()">Pause</button></div>
+        <p>Enter or Space for the next sound</p>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="snapshot.state === 'paused'">
+      <div class="notice pause-card"><p class="eyebrow">Paused</p><h1>Practice paused</h1><p>Your completed answers are saved.</p><button class="primary" type="button" (click)="resume()">Resume practice</button></div>
+    </ng-container>
+
+    <ng-container *ngIf="snapshot.state === 'error'">
+      <div class="notice"><p class="eyebrow">Audio needs attention</p><h1>The sound did not start</h1><p class="error">{{ snapshot.errorMessage }}</p><div class="button-row"><button class="primary" type="button" (click)="retry()">Try audio again</button><a class="button" routerLink="/learn/setup">Review setup</a></div></div>
+    </ng-container>
+  </section>
+
+  <ng-template #noSession>
+    <section class="practice-stage"><div class="notice"><p class="eyebrow">No active session</p><h1>Start from practice setup</h1><a class="button primary" routerLink="/learn/setup">Set up practice</a></div></section>
+  </ng-template>
+
+  <p class="storage-warning" *ngIf="!snapshot.storageWriteSucceeded">Practice can continue, but progress could not be saved in this browser.</p>
+</main>

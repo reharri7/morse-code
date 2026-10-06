@@ -1,0 +1,133 @@
+<main class="learn-page narrow">
+  <a class="back-link" routerLink="/learn">← Back to practice</a>
+  <p class="eyebrow">Sending practice</p>
+  <h1>Learn to key CW</h1>
+  <p class="lead">Practice sending with a straight key or USB paddle. Pause after the final mark and feedback appears automatically.</p>
+
+  <section class="panel">
+    <div class="field">
+      <label for="keying-input">Input</label>
+      <select id="keying-input" [(ngModel)]="inputMode" (ngModelChange)="inputChanged()">
+        <option value="straight">Straight key — Space or touch</option>
+        <option value="paddle">USB paddle — keyboard or mouse buttons</option>
+      </select>
+    </div>
+    <div *ngIf="inputMode === 'paddle'" class="notice">
+      <h2>Paddle setup</h2>
+      <p aria-live="polite">{{ setupMessage }}</p>
+      <p *ngIf="paddleReady">Dit: {{ ditCode }} · Dah: {{ dahCode }}</p>
+      <div class="button-row">
+        <button type="button" (click)="setupPaddle()">Set up paddle</button>
+        <button type="button" (click)="swapPaddles()" [disabled]="!paddleReady">Swap sides</button>
+        <button type="button" (click)="startPaddlePractice()" [disabled]="!paddleReady || capturingPaddle">Start paddle practice</button>
+      </div>
+      <p>Keep this page focused while using the paddle. Setup confirms both press and release signals.</p>
+      <p>Setup opens a focused practice window. Escape or Close practice restores normal page controls.</p>
+    </div>
+    <div class="settings-grid">
+      <div class="field">
+        <label for="keying-character">Character</label>
+        <select id="keying-character" [(ngModel)]="targetSymbolId" (ngModelChange)="targetChanged()">
+          <option *ngFor="let symbol of symbols" [value]="symbol">{{ symbol }}</option>
+        </select>
+        <small>Uses the characters already available in your listening course.</small>
+      </div>
+      <div class="field">
+        <label for="keying-wpm">Character speed</label>
+        <select id="keying-wpm" [(ngModel)]="characterWpm" (ngModelChange)="clearAttempt()">
+          <option *ngFor="let speed of speeds" [ngValue]="speed">{{ speed }} WPM</option>
+        </select>
+        <small>A dit is {{ 1200 / characterWpm | number:'1.0-0' }} ms at this speed.</small>
+      </div>
+    </div>
+  </section>
+
+  <ng-container *ngIf="!capturingPaddle" [ngTemplateOutlet]="practiceContent"></ng-container>
+  <dialog #paddleDialog class="paddle-dialog" aria-labelledby="paddle-dialog-title"
+    (cancel)="$event.preventDefault(); stopPaddlePractice()">
+    <header class="paddle-dialog-header">
+      <h2 id="paddle-dialog-title">{{ setupSide ? 'Set up your paddle' : 'Paddle practice' }}</h2>
+      <button type="button" data-paddle-control autofocus (click)="stopPaddlePractice()">Close practice</button>
+    </header>
+    <p class="paddle-dialog-help">Keep this window focused. Paddle clicks send marks, not ordinary clicks. Escape closes practice.</p>
+    <div *ngIf="setupSide" class="paddle-setup-prompt" aria-live="polite">
+      <p>{{ setupMessage }}</p>
+      <p>Press and release each side. Practice starts when both sides are detected.</p>
+    </div>
+    <ng-container *ngIf="paddleArmed">
+      <div class="paddle-dialog-settings">
+        <div class="field">
+          <label for="paddle-character">Character</label>
+          <select id="paddle-character" data-paddle-control [(ngModel)]="targetSymbolId" (ngModelChange)="targetChanged()">
+            <option *ngFor="let symbol of symbols" [value]="symbol">{{ symbol }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="paddle-wpm">Speed</label>
+          <select id="paddle-wpm" data-paddle-control [(ngModel)]="characterWpm" (ngModelChange)="clearAttempt()">
+            <option *ngFor="let speed of speeds" [ngValue]="speed">{{ speed }} WPM</option>
+          </select>
+        </div>
+        <button type="button" data-paddle-control (click)="hearTarget()">Hear target</button>
+      </div>
+      <ng-container [ngTemplateOutlet]="practiceContent"></ng-container>
+    </ng-container>
+  </dialog>
+
+  <ng-template #practiceContent>
+  <section class="keying-stage" aria-labelledby="keying-target">
+    <p class="eyebrow">Send this character</p>
+    <h2 id="keying-target" class="keying-target">{{ targetSymbolId }}</h2>
+    <p class="keying-pattern" [attr.aria-label]="'Pattern: ' + spokenTargetPattern">{{ displayTargetPattern }}</p>
+    <p class="keying-spoken">{{ spokenTargetPattern }}</p>
+    <button *ngIf="!paddleArmed" type="button" (click)="hearTarget()">Hear ideal timing</button>
+
+    <button
+      type="button"
+      *ngIf="inputMode === 'straight'"
+      class="keying-pad"
+      [class.active]="keyIsDown"
+      [attr.aria-pressed]="keyIsDown"
+      (pointerdown)="beginKeying($event)">
+      <strong>{{ keyIsDown ? 'KEY DOWN' : 'HOLD TO KEY' }}</strong>
+      <span>or hold Space</span>
+    </button>
+    <p *ngIf="inputMode === 'paddle'">{{ paddleArmed ? 'Hold either side to repeat; squeeze both to alternate. Clean characters advance automatically; send again to retry.' : 'Complete setup, then choose Start paddle practice.' }}</p>
+
+    <div class="sent-readout" aria-live="polite">
+      <span>Your marks</span>
+      <strong>{{ displaySentPattern }}</strong>
+    </div>
+    <p class="status-line">{{ status }}</p>
+    <p class="error" *ngIf="audioError">{{ audioError }}</p>
+    <div class="button-row keying-actions">
+      <button type="button" data-paddle-control (click)="checkAttempt()" [disabled]="!strokes.length || keyIsDown">Finish now</button>
+      <button type="button" data-paddle-control (click)="clearAttempt()" [disabled]="!strokes.length && !result">Clear</button>
+    </div>
+  </section>
+
+  <section
+    class="feedback-panel"
+    [class.correct]="result.passed"
+    [class.incorrect]="!result.passed"
+    *ngIf="result"
+    aria-live="polite">
+    <p class="eyebrow">Keying feedback</p>
+    <h2>{{ result.passed ? 'Clean copy' : (result.patternCorrect ? 'Recognizable, keep shaping it' : 'Different character') }}</h2>
+    <p>{{ result.guidance }}</p>
+    <p *ngIf="paddleArmed" class="paddle-next-step">
+      {{ result.passed ? 'Next character loads automatically. Tap either paddle to move on now.' : 'Start sending again whenever you are ready—the attempt resets automatically.' }}
+    </p>
+    <dl class="keying-result-grid">
+      <div><dt>Target</dt><dd>{{ displayTargetPattern }}</dd></div>
+      <div><dt>You sent</dt><dd>{{ displaySentPattern }}</dd></div>
+      <div><dt>Reads as</dt><dd>{{ result.decodedSymbolId || 'Unknown' }}</dd></div>
+      <div><dt>Rhythm</dt><dd>{{ result.rhythmScore }}%</dd></div>
+    </dl>
+    <div class="button-row">
+      <button type="button" data-paddle-control [class.primary]="!result.passed" (click)="clearAttempt()">Try again</button>
+      <button type="button" data-paddle-control [class.primary]="result.passed" (click)="nextCharacter()">Next character</button>
+    </div>
+  </section>
+  </ng-template>
+</main>

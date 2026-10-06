@@ -1,0 +1,21 @@
+:host { display: block; margin: 1rem 0; }
+* { box-sizing: border-box; }
+.live-copy { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; color: var(--ink); padding: 1.3rem; }
+.eyebrow { color: var(--signal); font-size: .67rem; font-weight: 700; letter-spacing: .1em; margin: 0; text-transform: uppercase; }
+h2, h3 { font-weight: 600; letter-spacing: -.02em; }
+h2 { margin: .3rem 0; }
+p { color: var(--muted); line-height: 1.55; }
+label { display: block; font-size: .78rem; font-weight: 650; margin-top: .9rem; }
+label small { color: var(--quiet); font-weight: 500; }
+textarea { background: var(--surface-deep); border: 1px solid var(--line-strong); border-radius: 3px; color: var(--ink); font: 1rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; margin-top: .35rem; padding: .75rem; resize: vertical; text-transform: uppercase; width: 100%; }
+button { background: transparent; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--ink); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 650; padding: .68rem .9rem; }
+button:hover:not(:disabled) { background: #20231f; border-color: #686c62; }
+button.primary { background: var(--signal); border-color: var(--signal); color: var(--signal-ink); }
+button:focus-visible, textarea:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+button:disabled { opacity: .45; }
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+.note { color: var(--quiet); font-size: .76rem; }
+.comparison { border-top: 1px solid var(--line); margin-top: 1.2rem; padding-top: .8rem; }
+dl div { border-top: 1px solid var(--line); padding: .65rem 0; }
+dt { color: var(--quiet); font-size: .7rem; }
+dd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin: .2rem 0 0; overflow-wrap: anywhere; }

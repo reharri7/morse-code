@@ -1,0 +1,55 @@
+<main class="learn-page">
+  <p class="eyebrow">Practice</p>
+  <h1>Practice Morse</h1>
+  <p class="lead">Start with the recommended character drill, or choose a focused copy or sending exercise.</p>
+  <div class="hero-actions">
+    <button class="primary" type="button" (click)="startCharacters()" [disabled]="!!launching">
+      {{ canContinue ? 'Continue character practice' : launching === 'characters' ? 'Starting…' : 'Start character practice' }}
+    </button>
+    <a class="button" routerLink="/learn/setup">Adjust settings</a>
+    <a class="text-link" routerLink="/learn/progress">View progress</a>
+  </div>
+
+  <section class="practice-summary" aria-label="Current practice settings">
+    <span><strong>{{ snapshot.profile.currentSymbolCount }}</strong> of 36 characters</span>
+    <span><strong>{{ snapshot.profile.settings.characterWpm }} / {{ snapshot.profile.settings.effectiveWpm }}</strong> WPM</span>
+    <span><strong>{{ snapshot.profile.recentSessions.length }}</strong> recent sessions</span>
+  </section>
+
+  <details class="current-set">
+    <summary>Your character set</summary>
+    <div class="symbol-list" aria-label="Available Morse characters">
+      <span class="symbol-chip" *ngFor="let symbol of activeSymbols">{{ symbol }}</span>
+    </div>
+    <div class="progress-track" aria-hidden="true"><span [style.width.%]="courseProgress * 100"></span></div>
+    <p>New characters unlock automatically as your copy becomes reliable.</p>
+  </details>
+
+  <section class="practice-library" aria-labelledby="practice-library-title">
+    <p class="eyebrow">More practice</p>
+    <h2 id="practice-library-title">Choose a mode</h2>
+    <div class="practice-menu">
+      <button type="button" class="practice-option" (click)="startCopy('groups')" [disabled]="!!launching">
+        <span><strong>Random groups</strong><small>Five-character copy</small></span><span aria-hidden="true">→</span>
+      </button>
+      <button type="button" class="practice-option" (click)="startCopy('words')" [disabled]="!!launching">
+        <span><strong>Words</strong><small>Unlocked vocabulary</small></span><span aria-hidden="true">→</span>
+      </button>
+      <button type="button" class="practice-option" (click)="startRadio('callsigns')" [disabled]="!!launching">
+        <span><strong>Callsigns</strong><small>Simulated station IDs</small></span><span aria-hidden="true">→</span>
+      </button>
+      <button type="button" class="practice-option" (click)="startRadio('contest')" [disabled]="!!launching">
+        <span><strong>Contest copy</strong><small>Reports and serials</small></span><span aria-hidden="true">→</span>
+      </button>
+      <button type="button" class="practice-option" (click)="startRadio('qso')" [disabled]="!!launching">
+        <span><strong>Simulated QSO</strong><small>Six-turn radio contact</small></span><span aria-hidden="true">→</span>
+      </button>
+      <a class="practice-option" routerLink="/learn/free-copy">
+        <span><strong>Free copy</strong><small>Passages or local recordings</small></span><span aria-hidden="true">→</span>
+      </a>
+      <a class="practice-option" routerLink="/learn/keying">
+        <span><strong>Sending</strong><small>Straight key or USB paddle</small></span><span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</main>

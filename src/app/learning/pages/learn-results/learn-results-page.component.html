@@ -1,0 +1,18 @@
+<main class="learn-page narrow">
+  <p class="eyebrow">Session results</p>
+  <ng-container *ngIf="snapshot.summary as summary; else noResults">
+    <h1>Practice complete</h1>
+    <p class="lead">A clear view of this session. Replay-assisted answers remain in your history but do not affect unlocking.</p>
+    <section class="panel">
+      <div class="results-score">{{ accuracy | percent:'1.0-0' }} <small>overall accuracy</small></div>
+      <div class="metric-grid">
+        <article class="metric-card"><span>Correct</span><strong>{{ summary.correct }} / {{ summary.attempts }}</strong></article>
+        <article class="metric-card"><span>Unassisted accuracy</span><strong>{{ summary.unassistedAccuracy === null ? 'Not enough evidence' : (summary.unassistedAccuracy | percent:'1.0-0') }}</strong></article>
+        <article class="metric-card"><span>Mean recognition</span><strong>{{ summary.meanRecognitionLatencyMs === null ? '—' : ((summary.meanRecognitionLatencyMs / 1000 | number:'1.1-1') + ' s') }}</strong></article>
+      </div>
+      <p *ngIf="summary.introducedSymbolId"><strong>{{ summary.introducedSymbolId }}</strong> is now available for your next session.</p>
+    </section>
+    <div class="button-row"><button class="primary" type="button" (click)="practiceAgain()" [disabled]="starting">{{ starting ? 'Starting…' : 'Practice again' }}</button><a class="button" routerLink="/learn/setup">Adjust settings</a><a class="button" routerLink="/learn/progress">View progress</a><a class="text-link" routerLink="/learn">All practice modes</a></div>
+  </ng-container>
+  <ng-template #noResults><h1>No completed session yet</h1><p class="lead">Complete a practice session to see accuracy and recognition timing here.</p><a class="button primary" routerLink="/learn/setup">Start practice</a></ng-template>
+</main>

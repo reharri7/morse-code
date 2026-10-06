@@ -1,0 +1,132 @@
+{
+  "version": 2,
+  "normalization": "none",
+  "description": "Deterministic, labeled, modeled audio-channel gate for raw CW decoding. These are synthetic RF-like conditions, not recordings of over-the-air signals.",
+  "baselineBeforeM5Tuning": {
+    "date": "2026-09-15",
+    "fixtureCount": 6,
+    "characterErrorRate": 0.72,
+    "wordErrorRate": 0.7777777778,
+    "exactMessageRate": 0.1666666667,
+    "unknownSymbolRate": 0.1333333333,
+    "acquisitionSuccessRate": 1,
+    "meanAcquisitionTimeMs": 149.3333333333,
+    "falseLockRate": 0.1666666667
+  },
+  "thresholds": {
+    "maximumCharacterErrorRate": 0.02,
+    "maximumWordErrorRate": 0.05,
+    "minimumExactMessageRate": 0.85,
+    "maximumUnknownSymbolRate": 0.01,
+    "minimumAcquisitionSuccessRate": 1,
+    "maximumMeanAcquisitionTimeMs": 300,
+    "maximumFalseLockRate": 0,
+    "minimumLockRecoveryRate": 1
+  },
+  "fixtures": [
+    {
+      "id": "clean-oracle",
+      "referenceText": "CQ CQ DE K6RHE",
+      "sourceType": "deterministic-synthetic",
+      "sampleRate": 8000,
+      "toneFrequencyHz": 600,
+      "wordsPerMinute": 20,
+      "amplitude": 0.6,
+      "condition": {},
+      "license": "CC0-1.0 generated in repository",
+      "tags": ["gate", "clean", "m1-regression"]
+    },
+    {
+      "id": "broadband-noise",
+      "referenceText": "CQ DE K1ABC",
+      "sourceType": "deterministic-synthetic",
+      "sampleRate": 8000,
+      "toneFrequencyHz": 735,
+      "wordsPerMinute": 18,
+      "amplitude": 0.14,
+      "condition": { "whiteNoiseAmplitude": 0.08, "seed": 101 },
+      "license": "CC0-1.0 generated in repository",
+      "tags": ["gate", "noise", "weak-signal"]
+    },
+    {
+      "id": "deep-slow-fading",
+      "referenceText": "TEST FADING 73",
+      "sourceType": "deterministic-synthetic",
+      "sampleRate": 8000,
+      "toneFrequencyHz": 680,
+      "wordsPerMinute": 16,
+      "amplitude": 0.18,
+      "fadingDepth": 0.78,
+      "fadingCycles": 3,
+      "condition": { "whiteNoiseAmplitude": 0.045, "seed": 202 },
+      "license": "CC0-1.0 generated in repository",
+      "tags": ["gate", "fading", "normalization"]
+    },
+    {
+      "id": "dc-hum-impulses",
+      "referenceText": "NOISE TEST 5NN",
+      "sourceType": "deterministic-synthetic",
+      "sampleRate": 8000,
+      "toneFrequencyHz": 620,
+      "wordsPerMinute": 20,
+      "amplitude": 0.16,
+      "condition": {
+        "whiteNoiseAmplitude": 0.035,
+        "dcOffset": 0.22,
+        "humFrequencyHz": 60,
+        "humAmplitude": 0.15,
+        "impulseEverySamples": 1200,
+        "impulseAmplitude": 0.9,
+        "seed": 303
+      },
+      "license": "CC0-1.0 generated in repository",
+      "tags": ["gate", "dc", "hum", "impulse", "filtering"]
+    },
+    {
+      "id": "adjacent-carrier",
+      "referenceText": "QRM TEST",
+      "sourceType": "deterministic-synthetic",
+      "sampleRate": 8000,
+      "toneFrequencyHz": 710,
+      "wordsPerMinute": 22,
+      "amplitude": 0.2,
+      "condition": {
+        "whiteNoiseAmplitude": 0.035,
+        "adjacentToneFrequencyHz": 790,
+        "adjacentToneAmplitude": 0.13,
+        "seed": 404
+      },
+      "license": "CC0-1.0 generated in repository",
+      "tags": ["gate", "interference", "qrm"]
+    },
+    {
+      "id": "drifting-weak-tone",
+      "referenceText": "DRIFT TEST 73",
+      "sourceType": "deterministic-synthetic",
+      "sampleRate": 8000,
+      "toneFrequencyHz": 650,
+      "frequencyDriftHz": 55,
+      "wordsPerMinute": 17,
+      "amplitude": 0.15,
+      "condition": { "whiteNoiseAmplitude": 0.05, "seed": 505 },
+      "license": "CC0-1.0 generated in repository",
+      "tags": ["gate", "drift", "noise", "recovery"]
+    },
+    {
+      "id": "loss-and-reacquisition",
+      "referenceText": "CQ TEST",
+      "sourceType": "deterministic-synthetic",
+      "sampleRate": 8000,
+      "toneFrequencyHz": 640,
+      "resumeToneFrequencyHz": 760,
+      "acceptedToneFrequenciesHz": [640, 760],
+      "wordsPerMinute": 18,
+      "amplitude": 0.22,
+      "outageAfterText": "CQ",
+      "outageDurationMs": 1100,
+      "condition": { "whiteNoiseAmplitude": 0.025, "seed": 606 },
+      "license": "CC0-1.0 generated in repository",
+      "tags": ["gate", "loss", "reacquisition", "frequency-change"]
+    }
+  ]
+}

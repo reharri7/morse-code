@@ -1,0 +1,225 @@
+<main>
+  <header class="brand-header">
+    <div>
+      <p class="eyebrow">Receive</p>
+      <h1>Live transcription</h1>
+      <p class="intro">Start listening. Tone lock and speed adjust automatically.</p>
+    </div>
+  </header>
+
+  <section class="operator-status" [attr.data-state]="operatorStateKey" aria-live="polite" aria-atomic="true">
+    <div class="status-beacon" aria-hidden="true"><span></span></div>
+    <div class="status-copy">
+      <p class="eyebrow">Live status</p>
+      <h2>{{ operatorStatus.title }}</h2>
+      <p>{{ operatorStatus.detail }}</p>
+    </div>
+    <dl class="status-facts">
+      <div><dt>Tone</dt><dd>{{ lockedFrequency }}</dd></div>
+      <div><dt>Signal</dt><dd>{{ signalQuality }}</dd></div>
+      <div><dt>Speed</dt><dd>{{ characterSpeed }}</dd></div>
+      <div><dt>Text</dt><dd>{{ decodeQuality }}</dd></div>
+    </dl>
+    <p *ngIf="hasActionableLockGuidance" class="lock-guidance" [class.manual]="lockMode === 'manual'">{{ lockGuidance }}</p>
+  </section>
+
+  <section class="control-panel" aria-label="Listening controls">
+    <div class="control-main">
+      <div class="field device-field">
+        <label for="input-device">Microphone</label>
+        <select id="input-device" [(ngModel)]="selectedDeviceId" (ngModelChange)="saveSettings()" [disabled]="isListening || isBusy || !captureSupported">
+          <option value="">{{ devices.length ? 'System default' : 'No input listed yet' }}</option>
+          <option *ngFor="let device of devices" [value]="device.deviceId">{{ device.label }}</option>
+        </select>
+      </div>
+      <div class="primary-actions">
+        <button *ngIf="!isListening" class="primary" type="button" (click)="startCapture()" [disabled]="!captureSupported || isBusy || verificationCaptureActive">Start listening</button>
+        <button *ngIf="isListening" class="stop" type="button" (click)="stopCapture()">Stop listening</button>
+        <button *ngIf="snapshot.rawText" type="button" (click)="resetTranscript()" [disabled]="isBusy">Clear text</button>
+      </div>
+    </div>
+
+    <details class="advanced-settings">
+      <summary><span>Signal settings</span><small>Automatic works for most CW</small></summary>
+      <div class="advanced-body">
+        <div class="advanced-grid">
+          <div class="field">
+            <label for="lock-mode">How to find the tone</label>
+            <select id="lock-mode" [(ngModel)]="lockMode" (ngModelChange)="changeLockMode()" [disabled]="isBusy">
+              <option value="automatic">Find automatically</option>
+              <option value="manual">Choose pitch manually</option>
+            </select>
+          </div>
+          <div class="field" *ngIf="lockMode === 'automatic'; else manualFrequency">
+            <label for="scan-min">Tone pitch range</label>
+            <div class="band-inputs">
+              <input id="scan-min" aria-label="Minimum tone pitch in hertz" [(ngModel)]="scanMinFrequencyHz" (change)="saveSettings()" type="number" min="100" max="1900" step="10" [disabled]="isListening || isBusy" />
+              <b>to</b>
+              <input aria-label="Maximum tone pitch in hertz" [(ngModel)]="scanMaxFrequencyHz" (change)="saveSettings()" type="number" min="200" max="2000" step="10" [disabled]="isListening || isBusy" />
+            </div>
+          </div>
+          <ng-template #manualFrequency>
+            <div class="field">
+              <label for="manual-frequency">Chosen tone pitch</label>
+              <div class="input-unit"><input id="manual-frequency" [(ngModel)]="manualFrequencyHz" (change)="changeLockMode()" type="number" [min]="scanMinFrequencyHz" [max]="scanMaxFrequencyHz" step="10" [disabled]="isBusy" /><span>Hz</span></div>
+            </div>
+          </ng-template>
+          <div class="secondary-actions">
+            <button type="button" (click)="refreshDevices()" [disabled]="isListening || isBusy || !captureSupported">Refresh microphones</button>
+            <button type="button" (click)="reacquireAutomatically()" [disabled]="!isListening || lockMode === 'automatic'">Return to automatic</button>
+          </div>
+        </div>
+
+        <div class="candidate-area" *ngIf="snapshot.acquisition.candidates.length">
+          <div class="section-heading compact"><div><p class="eyebrow">Detected tones</p><h3>Choose one if the text looks wrong</h3></div></div>
+          <div class="candidates">
+            <button type="button" *ngFor="let candidate of snapshot.acquisition.candidates" (click)="lockCandidate(candidate.frequencyHz)"
+              [class.current]="snapshot.acquisition.lockedFrequencyHz !== null && (candidate.frequencyHz - snapshot.acquisition.lockedFrequencyHz < 15 && snapshot.acquisition.lockedFrequencyHz - candidate.frequencyHz < 15)"
+              [attr.aria-label]="'Choose ' + (candidate.frequencyHz | number:'1.0-0') + ' hertz tone, clarity ' + candidateClarity(candidate.snrDb)">
+              <strong>{{ candidate.frequencyHz | number:'1.0-0' }} Hz</strong>
+              <span>{{ candidateClarity(candidate.snrDb) }} clarity</span>
+              <i [style.width.%]="candidate.score * 100"></i>
+            </button>
+          </div>
+        </div>
+        <p class="processing-note">Voice processing is disabled where possible; signal filtering remains local.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="transcript" *ngIf="liveCopyActive" aria-live="polite">
+    <div class="section-heading"><div><p class="eyebrow">Live-copy focus</p><h2>Decoder evidence is hidden</h2></div></div>
+    <p class="raw-note">Finish or cancel your copy to reveal immutable raw text, context, character evidence, and the timing timeline.</p>
+  </section>
+
+  <section class="transcript" *ngIf="!liveCopyActive" aria-label="Raw transcription results">
+    <div class="section-heading">
+      <div><p class="eyebrow">Raw transcript</p><h2>What the decoder heard</h2></div>
+      <span class="tone-pill" [class.active]="snapshot.toneState === 'tone'"><i aria-hidden="true"></i>{{ snapshot.toneState === 'tone' ? 'Tone sounding' : 'Between tones' }}</span>
+    </div>
+    <output aria-live="polite">{{ snapshot.rawText || 'Waiting for CW…' }}</output>
+    <p class="raw-note">Raw decoder output. “?” marks an unknown Morse pattern.</p>
+
+    <details class="character-details">
+      <summary><span>Character confidence</span><small>Inspect recent decoded characters</small></summary>
+      <div class="character-section">
+        <div class="subheading"><h3>Recent characters</h3><span>Choose a character to inspect it</span></div>
+        <div class="character-stream" *ngIf="recentCharacters.length; else noCharacters">
+          <button type="button" *ngFor="let item of recentCharacters" (click)="selectCharacter(item.index)"
+            [class]="item.quality" [class.selected]="selectedCharacterIndex === item.index"
+            [attr.aria-pressed]="selectedCharacterIndex === item.index"
+            [attr.aria-label]="'Character ' + item.evidence.character + ', confidence ' + confidenceLabel(item.evidence.confidence)">
+            <strong>{{ item.evidence.character }}</strong><span>{{ morseDisplay(item.evidence.morse) }}</span>
+          </button>
+        </div>
+        <ng-template #noCharacters><p class="empty-copy">Characters appear once timing settles.</p></ng-template>
+
+        <div class="evidence-card" [attr.data-quality]="selectedCharacter ? confidenceClass(selectedCharacter.confidence) : 'waiting'">
+          <div class="evidence-symbol">{{ selectedCharacter?.character || '—' }}</div>
+          <div>
+            <p class="eyebrow">Character evidence</p>
+            <h3>{{ selectedCharacter ? morseDisplay(selectedCharacter.morse) : 'Nothing decoded yet' }}</h3>
+            <p>{{ selectedCharacterExplanation }}</p>
+          </div>
+          <span class="confidence-badge">{{ selectedCharacter ? confidenceLabel(selectedCharacter.confidence) : 'Waiting' }}</span>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="operator-tools" aria-labelledby="operator-tools-title">
+    <div class="tools-heading">
+      <div><p class="eyebrow">When you need more</p><h2 id="operator-tools-title">Operator tools</h2></div>
+      <p>Copy, inspect, save, or test without crowding the live transcript.</p>
+    </div>
+
+    <div class="tool-list">
+      <details class="operator-tool">
+        <summary><span><strong>Copy without hints</strong><small>Hide decoder evidence while you copy</small></span></summary>
+        <app-live-copy
+          [rawText]="snapshot.rawText"
+          [characters]="snapshot.characters"
+          [timingConfidence]="snapshot.timing.confidence"
+          [receiverActive]="isListening"
+          (activeChange)="setLiveCopyActive($event)">
+        </app-live-copy>
+      </details>
+
+      <details class="operator-tool" *ngIf="!liveCopyActive">
+        <summary><span><strong>Edit, save & export</strong><small>Keep corrections separate from raw text</small></span></summary>
+        <app-session-tools
+          [rawText]="snapshot.rawText"
+          [characters]="snapshot.characters"
+          [deviceLabel]="currentDeviceLabel"
+          [toneFrequencyHz]="snapshot.acquisition.lockedFrequencyHz"
+          [characterWordsPerMinute]="snapshot.timing.characterWordsPerMinute"
+          [effectiveWordsPerMinute]="snapshot.timing.effectiveWordsPerMinute">
+        </app-session-tools>
+      </details>
+
+      <details class="operator-tool" *ngIf="!liveCopyActive">
+        <summary><span><strong>Signal detail</strong><small>Timing, dots and dashes, levels, and help</small></span></summary>
+        <div class="tool-body">
+          <section class="timeline-panel" aria-labelledby="timeline-title">
+            <div class="section-heading">
+              <div><p class="eyebrow">Recent signal</p><h2 id="timeline-title">Tones and spaces</h2></div>
+              <div class="timeline-legend" aria-hidden="true"><span class="short"></span> short <span class="long"></span> long <span class="space"></span> space</div>
+            </div>
+            <div class="timeline-track" *ngIf="timelineEvents.length; else noTimeline" aria-hidden="true">
+              <span *ngFor="let event of timelineEvents" [class]="event.kind + ' ' + event.quality" [style.flex-basis.px]="event.width" [title]="event.label">{{ event.symbol }}</span>
+            </div>
+            <ng-template #noTimeline><div class="timeline-empty">Waiting for signal timing.</div></ng-template>
+            <p class="sr-only">{{ timelineDescription }}</p>
+            <div class="morse-readout"><span>Dots and dashes</span><strong>{{ recentMarks }}</strong></div>
+          </section>
+
+          <section class="lower-grid">
+            <div class="diagnostics-card">
+              <div class="section-heading compact"><div><p class="eyebrow">At a glance</p><h2>Signal details</h2></div></div>
+              <dl class="metrics" aria-label="Live signal details">
+                <div><dt>Tone pitch</dt><dd>{{ lockedFrequency }}</dd></div>
+                <div><dt>Tone match</dt><dd>{{ lockQuality }}</dd></div>
+                <div><dt>Character speed</dt><dd>{{ characterSpeed }}</dd></div>
+                <div><dt>Overall speed</dt><dd>{{ overallSpeed }}</dd></div>
+                <div><dt>Timing quality</dt><dd [class.warning]="timingQuality === 'Uncertain'">{{ timingQuality }}</dd></div>
+                <div><dt>Text confidence</dt><dd [class.warning]="decodeQuality === 'Uncertain'">{{ decodeQuality }}</dd></div>
+                <div><dt>Noise cleanup</dt><dd>{{ isListening ? 'Active' : 'Ready' }}</dd></div>
+                <div><dt>Background noise</dt><dd>{{ backgroundNoise }}</dd></div>
+                <div><dt>Level adjustment</dt><dd>{{ levelAdjustment }}</dd></div>
+                <div><dt>Signal level</dt><dd>{{ signalDb }}</dd></div>
+                <div><dt>Detected tones</dt><dd>{{ snapshot.markCount }}</dd></div>
+                <div><dt>Missed audio blocks</dt><dd [class.warning]="snapshot.droppedFrameCount">{{ snapshot.droppedFrameCount }}</dd></div>
+              </dl>
+            </div>
+
+            <details class="help-card">
+              <summary>Signal troubleshooting</summary>
+              <ol>
+                <li><strong>Finding a tone</strong><span>Move the microphone closer or make the radio slightly louder.</span></li>
+                <li><strong>Wrong-looking text</strong><span>Open Signal settings and try another detected tone.</span></li>
+                <li><strong>Uncertain timing</strong><span>Let a few more characters play so the rhythm estimate can settle.</span></li>
+              </ol>
+            </details>
+          </section>
+        </div>
+      </details>
+
+      <details class="operator-tool">
+        <summary><span><strong>Test & calibrate</strong><small>Self-test, audio files, microphone, and speakers</small></span></summary>
+        <app-verification
+          [inputDevices]="devices"
+          [preferredDeviceId]="selectedDeviceId"
+          [liveCaptureActive]="isListening || isBusy"
+          (acousticActiveChange)="setVerificationCaptureActive($event)">
+        </app-verification>
+      </details>
+
+      <details class="operator-tool">
+        <summary><span><strong>Offline app</strong><small>Install and check offline readiness</small></span></summary>
+        <app-install-card></app-install-card>
+      </details>
+    </div>
+  </section>
+
+  <footer><span>Decoder self-check</span><code>{{ syntheticCheck }}</code><small>Expected: CQ CQ DE K6RHE</small></footer>
+</main>

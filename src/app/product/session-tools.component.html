@@ -1,0 +1,42 @@
+<section class="product-panel" aria-labelledby="context-title">
+  <div class="product-heading">
+    <div><p class="product-eyebrow">Optional</p><h2 id="context-title">Radio context</h2></div>
+    <span>Offline</span>
+  </div>
+
+  <div class="context-grid">
+    <div class="clues">
+      <h3>What the terms may mean</h3>
+      <p class="empty" *ngIf="!annotations.length">Callsign shapes, operating terms, and prosigns appear here.</p>
+      <article *ngFor="let item of annotations" class="clue">
+        <div class="clue-token"><strong>{{ item.displayText || item.sourceText }}</strong><small>{{ annotationKind(item.kind) }}</small><small>{{ item.confidence | percent:'1.0-0' }} text evidence</small></div>
+        <div><h4>{{ item.title }}</h4><p>{{ item.explanation }}</p></div>
+        <button *ngIf="item.replacement" type="button" (click)="useSuggestion(item)">Use {{ item.replacement }} in edited copy</button>
+      </article>
+    </div>
+
+    <div class="edit-copy">
+      <div class="edit-heading"><div><h3>Your edited copy</h3><p>Notes and corrections stay separate from raw text.</p></div><button type="button" (click)="restoreRawCopy()" [disabled]="editedText === rawText">Reset to raw</button></div>
+      <textarea aria-label="User-edited transcript copy" [(ngModel)]="editedText" (ngModelChange)="editChanged()" [placeholder]="rawText ? '' : 'Decoded text will appear here…'" rows="6"></textarea>
+      <div class="session-actions">
+        <button class="save" type="button" (click)="saveCurrent()" [disabled]="!rawText.trim()">Save on this device</button>
+        <button type="button" (click)="exportCurrent('text')" [disabled]="!rawText.trim()">Export text</button>
+        <button type="button" (click)="exportCurrent('json')" [disabled]="!rawText.trim()">Export JSON</button>
+      </div>
+      <p class="save-message" aria-live="polite">{{ saveMessage }}</p>
+    </div>
+  </div>
+
+  <details class="saved-sessions">
+    <summary><span>Saved sessions</span><small>{{ sessions.length }} stored locally</small></summary>
+    <p class="empty" *ngIf="!sessions.length">No saved sessions yet. Audio is never stored.</p>
+    <article *ngFor="let session of sessions" class="saved-card">
+      <div><time [attr.datetime]="session.savedAt">{{ session.savedAt | date:'medium' }}</time><p>{{ session.rawText || '(empty transcript)' }}</p></div>
+      <div class="saved-actions">
+        <button type="button" (click)="exportSaved(session, 'text')">Text</button>
+        <button type="button" (click)="exportSaved(session, 'json')">JSON</button>
+        <button class="delete" type="button" (click)="deleteSession(session.id)" [attr.aria-label]="'Delete saved session from ' + (session.savedAt | date:'medium')">Delete</button>
+      </div>
+    </article>
+  </details>
+</section>

@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-10-04",
+  "corpusVersion": 2,
+  "normalization": "none",
+  "aggregate": {
+    "fixtureCount": 7,
+    "characterErrorRate": 0.012345679012345678,
+    "wordErrorRate": 0.05,
+    "exactMessageRate": 0.8571428571428571,
+    "unknownSymbolRate": 0,
+    "acquisitionSuccessRate": 1,
+    "meanAcquisitionTimeMs": 201.14285714285714,
+    "falseLockRate": 0,
+    "lockRecoveryRate": 1,
+    "meanCharacterConfidence": 0.8227447467482937
+  },
+  "fixtures": [
+    { "id": "clean-oracle", "rawText": "CQ CQ DE K6RHE", "characterErrorRate": 0, "wordErrorRate": 0, "exact": true, "unknownSymbolCount": 0, "acquisitionTimeMs": 192, "falseLockCount": 0, "lockLossCount": 0, "lockRecoveryCount": 0 },
+    { "id": "broadband-noise", "rawText": "CQ DE K1AXC", "characterErrorRate": 0.09090909090909091, "wordErrorRate": 0.3333333333333333, "exact": false, "unknownSymbolCount": 0, "acquisitionTimeMs": 256, "falseLockCount": 0, "lockLossCount": 0, "lockRecoveryCount": 0 },
+    { "id": "deep-slow-fading", "rawText": "TEST FADING 73", "characterErrorRate": 0, "wordErrorRate": 0, "exact": true, "unknownSymbolCount": 0, "acquisitionTimeMs": 192, "falseLockCount": 0, "lockLossCount": 0, "lockRecoveryCount": 0 },
+    { "id": "dc-hum-impulses", "rawText": "NOISE TEST 5NN", "characterErrorRate": 0, "wordErrorRate": 0, "exact": true, "unknownSymbolCount": 0, "acquisitionTimeMs": 192, "falseLockCount": 0, "lockLossCount": 0, "lockRecoveryCount": 0 },
+    { "id": "adjacent-carrier", "rawText": "QRM TEST", "characterErrorRate": 0, "wordErrorRate": 0, "exact": true, "unknownSymbolCount": 0, "acquisitionTimeMs": 192, "falseLockCount": 0, "lockLossCount": 0, "lockRecoveryCount": 0 },
+    { "id": "drifting-weak-tone", "rawText": "DRIFT TEST 73", "characterErrorRate": 0, "wordErrorRate": 0, "exact": true, "unknownSymbolCount": 0, "acquisitionTimeMs": 192, "falseLockCount": 0, "lockLossCount": 0, "lockRecoveryCount": 0 },
+    { "id": "loss-and-reacquisition", "rawText": "CQ TEST", "characterErrorRate": 0, "wordErrorRate": 0, "exact": true, "unknownSymbolCount": 0, "acquisitionTimeMs": 192, "falseLockCount": 0, "lockLossCount": 1, "lockRecoveryCount": 1 }
+  ]
+}

@@ -1,0 +1,163 @@
+<section class="verification-panel" aria-labelledby="verification-title">
+  <div class="verification-heading">
+    <div>
+      <p class="eyebrow">Diagnostics</p>
+      <h2 id="verification-title">Verify the app</h2>
+      <p>Check the decoder, a recording, or the complete speaker-to-microphone path.</p>
+    </div>
+    <span>Nothing is uploaded</span>
+  </div>
+
+  <div class="verification-options">
+    <article class="verification-option recommended">
+      <p class="tag">Recommended</p>
+      <h3>Quick self-test</h3>
+      <p>Runs known CW through the decoder without using the microphone.</p>
+      <button class="primary" type="button" (click)="runQuickTest()" [disabled]="busy">Run quick self-test</button>
+      <details>
+        <summary>Advanced deterministic checks</summary>
+        <p>Also checks faster, noisy, drifting, and nearby-tone cases.</p>
+        <button type="button" (click)="runFullSuite()" [disabled]="busy">Run all five checks</button>
+      </details>
+    </article>
+
+    <article class="verification-option">
+      <p class="tag">Your recording</p>
+      <h3>Test an audio file</h3>
+      <p>Decodes locally without microphone permission. WAV is guaranteed; compressed formats depend on your browser.</p>
+      <label for="expected-file-text">Expected raw text <small>optional, exact</small></label>
+      <input id="expected-file-text" [(ngModel)]="expectedFileText" [disabled]="busy" placeholder="CQ CQ DE K6RHE" />
+      <label class="file-button" [class.disabled]="busy">
+        <span>Choose audio file</span>
+        <input type="file" accept=".wav,audio/wav,audio/x-wav,audio/*" (change)="selectAudioFile($event)" [disabled]="busy" />
+      </label>
+      <small>Maximum 25 MB and five minutes. Audio is discarded after the run.</small>
+    </article>
+
+    <article class="verification-option">
+      <p class="tag">Portable known signal</p>
+      <h3>Download the test clip</h3>
+      <p>Creates <strong>{{ portableCase.expectedText }}</strong> at 600 Hz and 15 WPM with a short lead-in and pause.</p>
+      <button type="button" (click)="downloadPortableClip()" [disabled]="busy">Download WAV</button>
+      <small>Useful for checking another device or browser.</small>
+    </article>
+  </div>
+
+  <div class="running" *ngIf="busy" role="status" aria-live="polite">
+    <span aria-hidden="true"></span><strong>{{ busyMessage }}</strong>
+    <button type="button" *ngIf="canCancel" (click)="cancel()">Cancel</button>
+  </div>
+  <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+
+  <div class="suite-results" *ngIf="suiteResults.length">
+    <button type="button" *ngFor="let item of suiteResults" (click)="showSuiteResult(item)"
+      [class.pass]="item.passed" [class.fail]="!item.passed">
+      <span>{{ item.passed ? 'Passed' : 'Needs attention' }}</span><strong>{{ item.case.title }}</strong>
+    </button>
+  </div>
+
+  <article class="verification-result" *ngIf="result as current" [attr.data-result]="current.passed ? 'pass' : 'fail'" aria-live="polite">
+    <div class="result-heading">
+      <div><p class="eyebrow">{{ current.sourceName }}</p><h3>{{ current.passed ? 'Verification passed' : 'A stage needs attention' }}</h3></div>
+      <span>{{ current.passed ? 'Pass' : 'Check result' }}</span>
+    </div>
+
+    <ol class="stage-list">
+      <li *ngFor="let stage of current.stages" [attr.data-status]="stage.status">
+        <span class="stage-mark" aria-hidden="true">{{ stage.status === 'pass' ? '✓' : stage.status === 'fail' ? '!' : stage.status === 'warning' ? '△' : '—' }}</span>
+        <div><strong>{{ stage.label }}</strong><p>{{ stage.summary }}</p><small>{{ stage.detail }}</small></div>
+      </li>
+    </ol>
+
+    <div class="raw-comparison">
+      <div><span>Expected raw text</span><code>{{ current.expectedText === null ? 'Not supplied' : current.expectedText }}</code></div>
+      <div><span>Received raw text</span><code>{{ current.rawText || '(empty)' }}</code></div>
+    </div>
+
+    <div class="diff" *ngIf="current.metrics && !current.metrics.exact" aria-label="Character differences">
+      <span *ngFor="let item of current.metrics.characterDiff" [attr.data-kind]="item.kind" [attr.aria-label]="diffLabel(item)"
+        [title]="diffLabel(item)">{{ diffSymbol(item.expected, item.actual) }}</span>
+    </div>
+
+    <p class="recommendation"><strong>What this means:</strong> {{ current.recommendation }}</p>
+    <details class="measurements">
+      <summary>Technical measurements</summary>
+      <dl>
+        <div><dt>Duration</dt><dd>{{ current.observations.durationSeconds | number:'1.1-1' }} s</dd></div>
+        <div><dt>Sample rate</dt><dd>{{ current.observations.sampleRate | number }} Hz</dd></div>
+        <div><dt>Tone</dt><dd>{{ current.observations.acquiredToneFrequencyHz === null ? 'Not found' : (current.observations.acquiredToneFrequencyHz | number:'1.0-0') + ' Hz' }}</dd></div>
+        <div><dt>Character speed</dt><dd>{{ current.observations.characterWordsPerMinute | number:'1.0-0' }} WPM</dd></div>
+        <div *ngIf="current.metrics"><dt>CER</dt><dd>{{ current.metrics.characterErrorRate | percent:'1.1-1' }}</dd></div>
+        <div *ngIf="current.metrics"><dt>WER</dt><dd>{{ current.metrics.wordErrorRate | percent:'1.1-1' }}</dd></div>
+      </dl>
+    </details>
+    <div class="result-actions">
+      <button type="button" (click)="exportResult('text')">Export text report</button>
+      <button type="button" (click)="exportResult('json')">Export JSON report</button>
+    </div>
+    <p class="privacy-note">Reports contain measurements and immutable raw text—not PCM, edited text, or context corrections.</p>
+  </article>
+
+  <section class="acoustic-test" aria-labelledby="acoustic-title">
+    <div class="acoustic-heading">
+      <div><p class="eyebrow">Physical path</p><h3 id="acoustic-title">Test microphone and speakers</h3></div>
+      <span>Explicit playback</span>
+    </div>
+    <p class="acoustic-intro">The Mac will play audible CW three times while the selected microphone listens. This tests speakers, room acoustics, microphone capture, and the raw decoder together.</p>
+
+    <div class="acoustic-setup">
+      <div>
+        <label for="acoustic-device">Microphone</label>
+        <select id="acoustic-device" [(ngModel)]="acousticDeviceId" [disabled]="acousticBusy || liveCaptureActive">
+          <option value="">System default microphone</option>
+          <option *ngFor="let device of inputDevices" [value]="device.deviceId">{{ device.label }}</option>
+        </select>
+      </div>
+      <label class="safety-check">
+        <input type="checkbox" [(ngModel)]="acousticConfirmed" [disabled]="acousticBusy" />
+        <span><strong>I disconnected headphones and set speaker volume to moderate.</strong><small>The test makes a short 600 Hz sound. Keep the Mac in an ordinary laptop position.</small></span>
+      </label>
+    </div>
+
+    <p class="capture-conflict" *ngIf="liveCaptureActive">Stop live listening before starting this physical test. Only one microphone session can run at a time.</p>
+    <p class="capture-conflict" *ngIf="!acousticSupported">This browser cannot run the guided microphone and speaker test.</p>
+    <div class="acoustic-actions">
+      <button class="primary" type="button" (click)="startAcousticTest()"
+        [disabled]="!acousticSupported || !acousticConfirmed || acousticBusy || liveCaptureActive">Start guided test</button>
+      <button class="cancel-acoustic" type="button" (click)="cancelAcousticTest()" *ngIf="acousticBusy">Cancel and release audio</button>
+    </div>
+
+    <div class="acoustic-progress" *ngIf="acousticBusy && acousticProgress as progress" role="status" aria-live="polite">
+      <span class="progress-beacon" aria-hidden="true"></span>
+      <div><strong>{{ progress.message }}</strong><small>Microphone audio stays in this active run and is not saved.</small></div>
+      <b *ngIf="progress.countdown">{{ progress.countdown }}</b>
+    </div>
+    <p class="error" *ngIf="acousticError" role="alert">{{ acousticError }}</p>
+
+    <div class="repetition-preview" *ngIf="acousticRepetitions.length">
+      <article *ngFor="let repetition of acousticRepetitions; let index = index">
+        <span>Repetition {{ index + 1 }}</span>
+        <strong>{{ repetition.rawText || '(no raw text)' }}</strong>
+        <small>{{ repetition.metrics?.characterErrorRate | percent:'1.1-1' }} CER · {{ repetition.observations.acquiredToneFrequencyHz === null ? 'tone not found' : (repetition.observations.acquiredToneFrequencyHz | number:'1.0-0') + ' Hz' }}</small>
+      </article>
+    </div>
+
+    <article class="acoustic-result" *ngIf="acousticResult as physical" [attr.data-result]="physical.provisionalPass ? 'pass' : 'fail'">
+      <div>
+        <p class="eyebrow">Provisional acoustic result</p>
+        <h3>{{ physical.provisionalPass ? 'Target met in this run' : 'Physical path needs attention' }}</h3>
+        <p>{{ physical.passingRepetitionCount }} of 3 repetitions were at or below 10% raw character error with the expected 600 Hz tone.</p>
+      </div>
+      <dl>
+        <div><dt>Input level</dt><dd>{{ physical.level === 'usable' ? 'Usable' : physical.level === 'clipping' ? 'Clipping' : 'Too quiet' }}</dd></div>
+        <div><dt>Room noise</dt><dd>{{ physical.roomNoiseRms | number:'1.4-4' }} RMS</dd></div>
+        <div><dt>Level peak</dt><dd>{{ physical.levelCheckPeak | percent:'1.0-0' }}</dd></div>
+      </dl>
+      <p class="provisional-warning"><strong>Not calibrated yet:</strong> this uses the planned provisional target. Run the documented MacBook volume/position baseline before treating it as the permanent pass threshold.</p>
+      <div class="result-actions">
+        <button type="button" (click)="exportAcousticResult('text')">Export acoustic text report</button>
+        <button type="button" (click)="exportAcousticResult('json')">Export acoustic JSON report</button>
+      </div>
+    </article>
+  </section>
+</section>
