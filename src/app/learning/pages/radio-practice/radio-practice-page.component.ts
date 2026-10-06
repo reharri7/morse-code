@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
@@ -11,8 +11,9 @@ import { RADIO_TOKEN_CONVENTIONS } from '../../domain/radio-practice';
 
 @Component({
   selector: 'app-radio-practice-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './radio-practice-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class RadioPracticePageComponent implements OnDestroy {

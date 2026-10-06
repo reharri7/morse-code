@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TrainingSessionService } from '../../application/training-session.service';
 
@@ -7,6 +7,7 @@ import { TrainingSessionService } from '../../application/training-session.servi
   selector: 'app-learn-results-page',
   imports: [CommonModule, RouterLink],
   templateUrl: './learn-results-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class LearnResultsPageComponent {

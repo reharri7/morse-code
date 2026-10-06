@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Inject, InjectionToken, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Inject, InjectionToken, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { encodeMorseText } from '../../../core/morse/morse-sequence';
@@ -41,6 +41,7 @@ export const KEYING_SCHEDULER = new InjectionToken<KeyingScheduler>(
   selector: 'app-keying-practice-page',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './keying-practice-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class KeyingPracticePageComponent implements OnDestroy {

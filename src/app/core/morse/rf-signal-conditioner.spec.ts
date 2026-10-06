@@ -7,7 +7,7 @@ describe('RfSignalConditioner', () => {
     const samples = Float32Array.from({ length: 4_096 }, (_, index) =>
       0.3 + (0.04 * Math.sin((2 * Math.PI * 600 * index) / sampleRate)) + (index === 2_000 ? 1.5 : 0)
     );
-    let last = new Float32Array();
+    let last: Float32Array = new Float32Array();
     for (let start = 0; start < samples.length; start += 512) {
       last = conditioner.pushFrame({
         samples: samples.slice(start, start + 512), sampleRate, startSample: start

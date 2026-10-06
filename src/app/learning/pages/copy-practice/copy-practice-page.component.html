@@ -2,27 +2,43 @@
   <div class="page-header"><a class="back-link" routerLink="/learn">← Learning home</a><div><p class="eyebrow">{{ mode === 'groups' ? 'Random groups' : 'Unlocked words' }}</p><h1>Copy a longer rhythm</h1></div></div>
   <p class="lead">Listen to the complete {{ mode === 'groups' ? 'group' : 'word' }}, then type what you heard.</p>
 
-  <section class="panel" *ngIf="snapshot.state === 'idle'">
-    <h2>Ready for 10 {{ mode === 'groups' ? 'groups' : 'words' }}</h2>
-    <p>{{ mode === 'groups' ? 'Each group contains five adaptively selected characters.' : 'Words come from the local CC0 practice corpus.' }}</p>
-    <button class="primary" type="button" (click)="start()">Start {{ mode === 'groups' ? 'group' : 'word' }} practice</button>
-  </section>
+  @if (snapshot.state === 'idle') {
+    <section class="panel">
+      <h2>Ready for 10 {{ mode === 'groups' ? 'groups' : 'words' }}</h2>
+      <p>{{ mode === 'groups' ? 'Each group contains five adaptively selected characters.' : 'Words come from the local CC0 practice corpus.' }}</p>
+      <button class="primary" type="button" (click)="start()">Start {{ mode === 'groups' ? 'group' : 'word' }} practice</button>
+    </section>
+  }
 
-  <section class="practice-stage" *ngIf="snapshot.state === 'playing'">
-    <div class="listen-mark playing" aria-hidden="true">·−</div><p class="eyebrow">Listen</p><h1>Copy the whole sound</h1><p>{{ snapshot.trialNumber }} of {{ snapshot.totalTrials }}</p>
-  </section>
+  @if (snapshot.state === 'playing') {
+    <section class="practice-stage">
+      <div class="listen-mark playing" aria-hidden="true">·−</div><p class="eyebrow">Listen</p><h1>Copy the whole sound</h1><p>{{ snapshot.trialNumber }} of {{ snapshot.totalTrials }}</p>
+    </section>
+  }
 
-  <section class="practice-stage" *ngIf="snapshot.state === 'answering'">
-    <div class="listen-mark" aria-hidden="true">·−</div><p class="eyebrow">Your turn</p><h1>Type what you heard</h1>
-    <div class="answer-panel"><form (ngSubmit)="submit()"><label for="copy-answer">Your copy</label><div class="answer-row"><input id="copy-answer" name="copyAnswer" autocomplete="off" [(ngModel)]="answer" /><button class="primary" type="submit">Check copy</button></div></form><div class="button-row"><button type="button" (click)="replay()">Replay sound</button></div></div>
-  </section>
+  @if (snapshot.state === 'answering') {
+    <section class="practice-stage">
+      <div class="listen-mark" aria-hidden="true">·−</div><p class="eyebrow">Your turn</p><h1>Type what you heard</h1>
+      <div class="answer-panel"><form (ngSubmit)="submit()"><label for="copy-answer">Your copy</label><div class="answer-row"><input id="copy-answer" name="copyAnswer" autocomplete="off" [(ngModel)]="answer" /><button class="primary" type="submit">Check copy</button></div></form><div class="button-row"><button type="button" (click)="replay()">Replay sound</button></div></div>
+    </section>
+  }
 
-  <section class="practice-stage" *ngIf="snapshot.state === 'feedback' && snapshot.feedback as feedback">
-    <p class="eyebrow">Copy feedback</p><h1>{{ feedback.correct ? 'Exact copy' : feedback.characterErrors + ' character ' + (feedback.characterErrors === 1 ? 'difference' : 'differences') }}</h1>
-    <div class="feedback-panel" [class.correct]="feedback.correct" [class.incorrect]="!feedback.correct"><p>Expected</p><div class="feedback-symbol"><strong>{{ feedback.expectedText }}</strong></div><p>Your copy: <strong>{{ feedback.enteredText || '—' }}</strong></p><button class="primary" type="button" (click)="next()">{{ snapshot.trialNumber >= snapshot.totalTrials ? 'Finish' : 'Next sound' }}</button></div>
-  </section>
+  @if (snapshot.state === 'feedback' && snapshot.feedback; as feedback) {
+    <section class="practice-stage">
+      <p class="eyebrow">Copy feedback</p><h1>{{ feedback.correct ? 'Exact copy' : feedback.characterErrors + ' character ' + (feedback.characterErrors === 1 ? 'difference' : 'differences') }}</h1>
+      <div class="feedback-panel" [class.correct]="feedback.correct" [class.incorrect]="!feedback.correct"><p>Expected</p><div class="feedback-symbol"><strong>{{ feedback.expectedText }}</strong></div><p>Your copy: <strong>{{ feedback.enteredText || '—' }}</strong></p><button class="primary" type="button" (click)="next()">{{ snapshot.trialNumber >= snapshot.totalTrials ? 'Finish' : 'Next sound' }}</button></div>
+    </section>
+  }
 
-  <section class="panel" *ngIf="snapshot.state === 'complete'"><p class="eyebrow">Session complete</p><h1>{{ snapshot.correctTrials }} / {{ snapshot.totalTrials }} exact</h1><p>Character-level evidence was saved after every answer.</p><div class="button-row"><button class="primary" type="button" (click)="start()">Practice again</button><a class="button" routerLink="/learn/progress">View progress</a></div></section>
-  <section class="notice" *ngIf="snapshot.state === 'error'"><h2>Practice is not ready</h2><p class="error">{{ snapshot.errorMessage }}</p><div class="button-row"><button type="button" (click)="start()">Try again</button><a class="button" [routerLink]="['/learn/copy']" [queryParams]="{ mode: 'groups' }" *ngIf="mode === 'words'">Use random groups</a></div></section>
-  <p class="storage-warning" *ngIf="!snapshot.storageWriteSucceeded">Practice can continue, but progress could not be saved.</p>
+  @if (snapshot.state === 'complete') {
+    <section class="panel"><p class="eyebrow">Session complete</p><h1>{{ snapshot.correctTrials }} / {{ snapshot.totalTrials }} exact</h1><p>Character-level evidence was saved after every answer.</p><div class="button-row"><button class="primary" type="button" (click)="start()">Practice again</button><a class="button" routerLink="/learn/progress">View progress</a></div></section>
+  }
+  @if (snapshot.state === 'error') {
+    <section class="notice"><h2>Practice is not ready</h2><p class="error">{{ snapshot.errorMessage }}</p><div class="button-row"><button type="button" (click)="start()">Try again</button>@if (mode === 'words') {
+    <a class="button" [routerLink]="['/learn/copy']" [queryParams]="{ mode: 'groups' }">Use random groups</a>
+  }</div></section>
+}
+@if (!snapshot.storageWriteSucceeded) {
+  <p class="storage-warning">Practice can continue, but progress could not be saved.</p>
+}
 </main>

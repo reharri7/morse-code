@@ -1,13 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CopyPracticeMode, CopyPracticeService, CopyPracticeSnapshot } from '../../application/copy-practice.service';
 
 @Component({
   selector: 'app-copy-practice-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './copy-practice-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class CopyPracticePageComponent implements OnDestroy {

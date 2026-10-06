@@ -34,7 +34,9 @@
       <div class="field">
         <label for="review-level">Characters to practice</label>
         <select id="review-level" [(ngModel)]="reviewSymbolCount">
-          <option *ngFor="let level of reviewLevels" [ngValue]="level.count">{{ level.label }}</option>
+          @for (level of reviewLevels; track level.count) {
+            <option [ngValue]="level.count">{{ level.label }}</option>
+          }
         </select>
         <small>Review does not change your unlocked set.</small>
       </div>
@@ -46,11 +48,13 @@
     <h2>Hear your newest characters</h2>
     <p>Listen once before starting. Patterns stay hidden during practice.</p>
     <div class="intro-grid">
-      <article class="symbol-card" *ngFor="let symbol of introductionSymbols">
-        <span class="symbol">{{ symbol }}</span>
-        <div><strong>{{ symbol }}</strong><br /><code>{{ pattern(symbol) }}</code></div>
-        <button type="button" (click)="hear(symbol)" [disabled]="!audioSupported">Hear {{ symbol }}</button>
-      </article>
+      @for (symbol of introductionSymbols; track symbol) {
+        <article class="symbol-card">
+          <span class="symbol">{{ symbol }}</span>
+          <div><strong>{{ symbol }}</strong><br /><code>{{ pattern(symbol) }}</code></div>
+          <button type="button" (click)="hear(symbol)" [disabled]="!audioSupported">Hear {{ symbol }}</button>
+        </article>
+      }
     </div>
     <p class="status-line" aria-live="polite">{{ introStatus }}</p>
   </section>
@@ -59,5 +63,7 @@
     <button class="primary" type="button" (click)="startPractice()" [disabled]="starting || !audioSupported">{{ starting ? 'Starting…' : 'Start practice' }}</button>
     <a class="button" routerLink="/learn">Cancel</a>
   </div>
-  <p class="error" *ngIf="!audioSupported">This browser cannot generate practice audio.</p>
+  @if (!audioSupported) {
+    <p class="error">This browser cannot generate practice audio.</p>
+  }
 </main>

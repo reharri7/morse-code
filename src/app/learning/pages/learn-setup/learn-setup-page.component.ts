@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { encodeMorseText } from '../../../core/morse/morse-sequence';
@@ -12,8 +12,9 @@ import { MorseAudioService } from '../../infrastructure/morse-audio.service';
 
 @Component({
   selector: 'app-learn-setup-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './learn-setup-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class LearnSetupPageComponent implements OnDestroy {

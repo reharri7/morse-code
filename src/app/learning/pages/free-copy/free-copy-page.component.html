@@ -2,41 +2,69 @@
   <div class="page-header"><a class="back-link" routerLink="/learn">← Learning home</a><div><p class="eyebrow">Long-form listening</p><h1>Free copy</h1></div></div>
   <p class="lead">Type continuously while a longer passage plays.</p>
 
-  <section class="panel" *ngIf="snapshot.state === 'idle'">
-    <h2>Eight-word passage</h2><p>Built from words available at your current level.</p><button class="primary" type="button" (click)="start()">Start free copy</button>
-  </section>
+  @if (snapshot.state === 'idle') {
+    <section class="panel">
+      <h2>Eight-word passage</h2><p>Built from words available at your current level.</p><button class="primary" type="button" (click)="start()">Start free copy</button>
+    </section>
+  }
 
-  <section class="practice-stage" *ngIf="snapshot.state === 'playing' || snapshot.state === 'copying' || snapshot.state === 'paused'">
-    <div class="listen-mark" [class.playing]="snapshot.state === 'playing'" aria-hidden="true">·−</div>
-    <p class="eyebrow">{{ snapshot.state === 'paused' ? 'Paused' : snapshot.state === 'playing' ? 'Listening' : 'Audio finished' }}</p>
-    <h1>{{ snapshot.state === 'paused' ? 'Your draft is safe' : 'Keep copying' }}</h1>
-    <p *ngIf="snapshot.state === 'paused'">Resume restarts the passage from the beginning.</p>
-    <div class="answer-panel"><label for="free-copy-answer">Your live copy</label><textarea id="free-copy-answer" rows="7" [(ngModel)]="draft" (ngModelChange)="updateDraft()" maxlength="200"></textarea><div class="button-row"><button type="button" (click)="pause()" *ngIf="snapshot.state !== 'paused'">Pause</button><button type="button" (click)="resume()" *ngIf="snapshot.state === 'paused'">Resume from start</button><button class="primary" type="button" (click)="finish()" [disabled]="!draft.trim()">Finish and compare</button></div></div>
-  </section>
+  @if (snapshot.state === 'playing' || snapshot.state === 'copying' || snapshot.state === 'paused') {
+    <section class="practice-stage">
+      <div class="listen-mark" [class.playing]="snapshot.state === 'playing'" aria-hidden="true">·−</div>
+      <p class="eyebrow">{{ snapshot.state === 'paused' ? 'Paused' : snapshot.state === 'playing' ? 'Listening' : 'Audio finished' }}</p>
+      <h1>{{ snapshot.state === 'paused' ? 'Your draft is safe' : 'Keep copying' }}</h1>
+      @if (snapshot.state === 'paused') {
+        <p>Resume restarts the passage from the beginning.</p>
+      }
+      <div class="answer-panel"><label for="free-copy-answer">Your live copy</label><textarea id="free-copy-answer" rows="7" [(ngModel)]="draft" (ngModelChange)="updateDraft()" maxlength="200"></textarea><div class="button-row">@if (snapshot.state !== 'paused') {
+      <button type="button" (click)="pause()">Pause</button>
+      }@if (snapshot.state === 'paused') {
+      <button type="button" (click)="resume()">Resume from start</button>
+      }<button class="primary" type="button" (click)="finish()" [disabled]="!draft.trim()">Finish and compare</button></div></div>
+    </section>
+  }
 
-  <section class="panel" *ngIf="snapshot.state === 'review' && snapshot.comparison as comparison">
-    <p class="eyebrow">Post-session alignment</p><h1>{{ comparison.referenceScore?.correct ? 'Exact copy' : (comparison.referenceScore?.characterErrors || 0) + ' differences' }}</h1>
-    <p>Expected reference: <strong>{{ snapshot.expectedText }}</strong></p><p>Your copy: <strong>{{ comparison.userCopy }}</strong></p><p>{{ comparison.explanation }}</p><div class="button-row"><button class="primary" type="button" (click)="start()">New passage</button><a class="button" routerLink="/learn/progress">View progress</a></div>
-  </section>
-  <section class="notice" *ngIf="snapshot.state === 'error'"><h2>Free copy is not ready</h2><p class="error">{{ snapshot.errorMessage }}</p><a class="button primary" routerLink="/learn/setup">Continue character learning</a></section>
+  @if (snapshot.state === 'review' && snapshot.comparison; as comparison) {
+    <section class="panel">
+      <p class="eyebrow">Post-session alignment</p><h1>{{ comparison.referenceScore?.correct ? 'Exact copy' : (comparison.referenceScore?.characterErrors || 0) + ' differences' }}</h1>
+      <p>Expected reference: <strong>{{ snapshot.expectedText }}</strong></p><p>Your copy: <strong>{{ comparison.userCopy }}</strong></p><p>{{ comparison.explanation }}</p><div class="button-row"><button class="primary" type="button" (click)="start()">New passage</button><a class="button" routerLink="/learn/progress">View progress</a></div>
+    </section>
+  }
+  @if (snapshot.state === 'error') {
+    <section class="notice"><h2>Free copy is not ready</h2><p class="error">{{ snapshot.errorMessage }}</p><a class="button primary" routerLink="/learn/setup">Continue character learning</a></section>
+  }
 
   <section class="panel">
     <p class="eyebrow">Optional local recording</p><h2>Practice with audio you may use</h2>
     <p>Use a licensed, public-domain, or consented recording. The file stays in this session.</p>
     <label><input type="checkbox" [(ngModel)]="recordingConfirmed" /> I confirm I may use this recording for private practice.</label>
     <div class="field"><label for="practice-recording">Local audio file (maximum 25 MB and five minutes)</label><input id="practice-recording" type="file" accept="audio/*,.wav" [disabled]="!recordingConfirmed || recordingBusy || snapshot.state === 'playing' || snapshot.state === 'copying' || snapshot.state === 'paused'" (change)="selectRecording($event)" /></div>
-    <p *ngIf="recordingBusy">Preparing the recording locally…</p><p class="error" *ngIf="recordingError">{{ recordingError }}</p>
-    <div *ngIf="recordingUrl && recordingResult">
-      <p><strong>{{ recordingName }}</strong></p><audio controls [src]="recordingUrl"></audio>
-      <div class="field"><label for="recording-copy">Your copy</label><textarea id="recording-copy" rows="6" [(ngModel)]="recordingUserCopy"></textarea></div>
-      <div class="field"><label for="recording-reference">Optional trusted reference text</label><textarea id="recording-reference" rows="3" [(ngModel)]="recordingReference"></textarea><small>Only this reference can produce an accuracy score. Raw decoder output remains an uncertain comparison.</small></div>
-      <button class="primary" type="button" (click)="compareRecording()" [disabled]="!recordingUserCopy.trim()">Finish and reveal comparisons</button>
-    </div>
-    <div class="feedback-panel" *ngIf="recordingComparison as comparison">
-      <p>Your copy: <strong>{{ comparison.userCopy }}</strong></p><p>Immutable raw decoder text: <strong>{{ comparison.rawDecoderText || '—' }}</strong></p><p>Optional reference: <strong>{{ comparison.referenceText || 'Not provided' }}</strong></p>
-      <p *ngIf="comparison.referenceScore">Reference differences: {{ comparison.referenceScore.characterErrors }}</p><p *ngIf="comparison.decoderAlignment">Unscored decoder alignment differences: {{ comparison.decoderAlignment.characterErrors }}</p>
-      <p>{{ comparison.explanation }}</p><p>Receiver evidence after the attempt: decoder confidence {{ (comparison.decoderConfidence || 0) * 100 | number:'1.0-0' }}%; timing confidence {{ (comparison.timingConfidence || 0) * 100 | number:'1.0-0' }}%.</p>
-    </div>
+    @if (recordingBusy) {
+      <p>Preparing the recording locally…</p>
+      }@if (recordingError) {
+      <p class="error">{{ recordingError }}</p>
+    }
+    @if (recordingUrl && recordingResult) {
+      <div>
+        <p><strong>{{ recordingName }}</strong></p><audio controls [src]="recordingUrl"></audio>
+        <div class="field"><label for="recording-copy">Your copy</label><textarea id="recording-copy" rows="6" [(ngModel)]="recordingUserCopy"></textarea></div>
+        <div class="field"><label for="recording-reference">Optional trusted reference text</label><textarea id="recording-reference" rows="3" [(ngModel)]="recordingReference"></textarea><small>Only this reference can produce an accuracy score. Raw decoder output remains an uncertain comparison.</small></div>
+        <button class="primary" type="button" (click)="compareRecording()" [disabled]="!recordingUserCopy.trim()">Finish and reveal comparisons</button>
+      </div>
+    }
+    @if (recordingComparison; as comparison) {
+      <div class="feedback-panel">
+        <p>Your copy: <strong>{{ comparison.userCopy }}</strong></p><p>Immutable raw decoder text: <strong>{{ comparison.rawDecoderText || '—' }}</strong></p><p>Optional reference: <strong>{{ comparison.referenceText || 'Not provided' }}</strong></p>
+        @if (comparison.referenceScore) {
+          <p>Reference differences: {{ comparison.referenceScore.characterErrors }}</p>
+          }@if (comparison.decoderAlignment) {
+          <p>Unscored decoder alignment differences: {{ comparison.decoderAlignment.characterErrors }}</p>
+        }
+        <p>{{ comparison.explanation }}</p><p>Receiver evidence after the attempt: decoder confidence {{ (comparison.decoderConfidence || 0) * 100 | number:'1.0-0' }}%; timing confidence {{ (comparison.timingConfidence || 0) * 100 | number:'1.0-0' }}%.</p>
+      </div>
+    }
   </section>
-  <p class="storage-warning" *ngIf="!snapshot.storageWriteSucceeded">Practice can continue, but generated-copy character evidence could not be saved.</p>
+  @if (!snapshot.storageWriteSucceeded) {
+    <p class="storage-warning">Practice can continue, but generated-copy character evidence could not be saved.</p>
+  }
 </main>

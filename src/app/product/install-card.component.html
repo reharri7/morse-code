@@ -3,6 +3,8 @@
   <div><p class="eyebrow">Offline</p><h2 id="install-title">Install this app</h2><p>{{ installGuidance }}</p></div>
   <div class="install-actions">
     <span [class.offline]="!isOnline"><i aria-hidden="true"></i>{{ offlineStatus }}</span>
-    <button *ngIf="installAvailable && !isInstalled" type="button" (click)="installApp()">Install app</button>
+    @if (installAvailable && !isInstalled) {
+      <button type="button" (click)="installApp()">Install app</button>
+    }
   </div>
 </section>

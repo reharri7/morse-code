@@ -5,13 +5,15 @@
     <table class="progress-table">
       <thead><tr><th scope="col">Character</th><th scope="col">Accuracy</th><th scope="col">Attempts</th><th scope="col">Replays</th><th scope="col">Mean recognition</th></tr></thead>
       <tbody>
-        <tr *ngFor="let item of statistics">
-          <td>{{ item.symbolId }}</td>
-          <td>{{ accuracy(item) === null ? 'No attempts' : (accuracy(item) | percent:'1.0-0') }}</td>
-          <td>{{ item.attempts }}</td>
-          <td>{{ item.replayCount }}</td>
-          <td>{{ meanLatency(item) === null ? '—' : ((meanLatency(item)! / 1000 | number:'1.1-1') + ' s') }}</td>
-        </tr>
+        @for (item of statistics; track item) {
+          <tr>
+            <td>{{ item.symbolId }}</td>
+            <td>{{ accuracy(item) === null ? 'No attempts' : (accuracy(item) | percent:'1.0-0') }}</td>
+            <td>{{ item.attempts }}</td>
+            <td>{{ item.replayCount }}</td>
+            <td>{{ meanLatency(item) === null ? '—' : ((meanLatency(item)! / 1000 | number:'1.1-1') + ' s') }}</td>
+          </tr>
+        }
       </tbody>
     </table>
   </section>

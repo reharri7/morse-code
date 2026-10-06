@@ -1,5 +1,7 @@
 # Documentation map
 
+Platform baseline (2026-10-06): the application is upgraded from Angular 19.2 to Angular 22.2 with TypeScript 6.0 and the current `@angular/build` application, development-server, extraction, and Karma builders. Node 24.15 is the recorded and enforced local runtime. Angular's migrations converted templates to built-in control flow and preserved eager change detection; stable loop keys and typed-array handoffs resolve the stricter Angular 22/TypeScript 6 checks. All 166 ChromeHeadless tests, the unchanged 1.23% CER/5% WER RF gate, a warning-free 521.93 kB initial production build, and cache-v23 server-offline routes pass.
+
 Latest M14 interaction (2026-10-05): setup and active paddle practice now use a native focused modal with a dimmed/inert background, target/marks/feedback together, and Escape/Close recovery. Setup transitions directly into practice after both contacts are learned. Cache v18 delivers it; 161 tests and the warning-free production build pass. Physical paddle acceptance stays open.
 
 Latest (2026-10-05): explicit Start/Stop paddle practice replaces the mouse safe area. Setup and armed practice capture mouse input across the page, block ordinary clicks/scrolling, and restore controls with Escape, Stop, focus loss, or navigation. Cache v17 ships the interaction; physical paddle acceptance is still open.

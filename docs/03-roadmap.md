@@ -2,6 +2,8 @@
 
 Complete milestones in order unless a documented decision says otherwise. Each milestone must add tests, update this checklist, and record material tradeoffs in the decision log.
 
+Platform maintenance follow-up (2026-10-06): upgrade sequentially from Angular 19.2 through 20 and 21 to Angular 22.2 using the official migrations. The repository now uses TypeScript 6.0, `@angular/build`, built-in template control flow, explicit eager change detection, and Node 24.15 recorded in `.nvmrc` and `package.json`. Stable `@for` keys preserve learning/transcription DOM state under Angular 22's stricter checks; Web Audio receives an explicitly `ArrayBuffer`-backed PCM copy. All 166 ChromeHeadless tests, the unchanged 1.23% CER/5% WER benchmark, a warning-free 521.93 kB initial build, and cache-v23 direct server-offline route gate pass. No product milestone, DSP behavior, raw text, storage schema, or outstanding physical acceptance changed.
+
 ## M1 — Deterministic synthetic decoder — complete
 
 - [x] Framework-independent TypeScript core under `src/app/core/morse/`.

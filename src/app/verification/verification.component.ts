@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputDevice } from '../input/microphone-capture';
 import {
@@ -19,6 +19,7 @@ import { encodeMonoPcm16Wav } from './wav-codec';
   selector: 'app-verification',
   imports: [CommonModule, FormsModule],
   templateUrl: './verification.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './verification.component.css'
 })
 export class VerificationComponent implements OnDestroy {

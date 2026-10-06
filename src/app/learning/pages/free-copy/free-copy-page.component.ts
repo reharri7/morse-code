@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { FreeCopyService, FreeCopySnapshot } from '../../application/free-copy.service';
@@ -12,6 +12,7 @@ import { runPcmVerification } from '../../../verification/verification-runner';
   selector: 'app-free-copy-page',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './free-copy-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class FreeCopyPageComponent implements OnDestroy {

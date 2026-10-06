@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AcquiringCwDecoder, AcquiringCwSnapshot } from '../core/morse/acquiring-cw-decoder';
 import { decodeSyntheticCw } from '../core/morse/cw-pipeline';
@@ -16,6 +16,7 @@ import { LiveCopyComponent } from '../live-copy/live-copy.component';
   selector: 'app-transcription-page',
   imports: [CommonModule, FormsModule, SessionToolsComponent, InstallCardComponent, VerificationComponent, LiveCopyComponent],
   templateUrl: './transcription-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './transcription-page.component.css'
 })
 export class TranscriptionPageComponent implements OnInit, OnDestroy {

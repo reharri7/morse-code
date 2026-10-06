@@ -20,7 +20,7 @@ This repository is a local-first Angular application for real-time CW/Morse tran
 - Make uncertainty explicit. Prefer a confidence score, unknown marker, or visible proposal over an invented character.
 - Preserve testability: deterministic synthetic input and labeled recorded fixtures are first-class product assets.
 
-## Current verified baseline (2026-10-04)
+## Current verified baseline (2026-10-06)
 
 - M1 is implemented in `src/app/core/morse/`; its exact synthetic check remains visible in the M6 live operator UI.
 - The test suite passes the canonical exact decode: `CQ CQ DE K6RHE` → generated audio → `CQ CQ DE K6RHE`.
@@ -44,6 +44,7 @@ This repository is a local-first Angular application for real-time CW/Morse tran
 - On 2026-10-04 the user changed their callsign from KO6PAS to K6RHE. The canonical decoder oracle, version-2 verification messages, UI examples, version-2 RF fixture, and documentation now use `K6RHE`. All 157 ChromeHeadless tests, the 1.23% CER/5% WER RF gate, a warning-free 476.07 kB initial production build, and the direct server-offline route gate pass; cache v13 delivers the identity update after the M13 cache-v12 release.
 
 - Keying automatically scores after a three-dit character gap; a new mark cancels the pending timer and keying after feedback starts a fresh attempt. Finish now is optional. Cache v14 delivers this follow-up; the 157-test suite passes.
+- The project now uses Angular 22.2, TypeScript 6.0, and the `@angular/build` builders under Node 24.15. Official migrations were applied one major at a time from Angular 19.2, templates use built-in control flow, and Angular 22's eager change-detection behavior remains explicit. All 166 ChromeHeadless tests, the unchanged 1.23% CER/5% WER RF gate, a warning-free 521.93 kB initial build, and cache-v23 offline routes pass.
 
 ## Useful locations
 

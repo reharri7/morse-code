@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DecodedCharacterEvidence } from '../core/morse/interfaces';
 import { CopyComparison, buildCopyComparison } from '../learning/domain/free-copy';
@@ -8,6 +8,7 @@ import { CopyComparison, buildCopyComparison } from '../learning/domain/free-cop
   selector: 'app-live-copy',
   imports: [CommonModule, FormsModule],
   templateUrl: './live-copy.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './live-copy.component.css'
 })
 export class LiveCopyComponent implements OnDestroy {

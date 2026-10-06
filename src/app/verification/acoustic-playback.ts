@@ -31,7 +31,7 @@ export class SpeakerPlayback {
     if (signal?.aborted) throw abortError();
     const context = await this.ensureContext();
     const buffer = context.createBuffer(1, samples.length, sampleRate);
-    buffer.copyToChannel(samples, 0);
+    buffer.copyToChannel(new Float32Array(samples), 0);
     const source = context.createBufferSource();
     source.buffer = buffer;
     source.connect(context.destination);

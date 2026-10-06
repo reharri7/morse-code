@@ -19,7 +19,9 @@
   <details class="current-set">
     <summary>Your character set</summary>
     <div class="symbol-list" aria-label="Available Morse characters">
-      <span class="symbol-chip" *ngFor="let symbol of activeSymbols">{{ symbol }}</span>
+      @for (symbol of activeSymbols; track symbol) {
+        <span class="symbol-chip">{{ symbol }}</span>
+      }
     </div>
     <div class="progress-track" aria-hidden="true"><span [style.width.%]="courseProgress * 100"></span></div>
     <p>New characters unlock automatically as your copy becomes reliable.</p>

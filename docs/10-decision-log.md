@@ -2,6 +2,14 @@
 
 Add new entries at the top. Record decisions that would otherwise make a future session revisit product or architecture debate. Include date, decision, rationale, consequences, and any revisitation trigger.
 
+## 2026-10-06 — Angular 22 is the supported application baseline
+
+**Decision:** Upgrade sequentially from Angular 19.2 through 20 and 21 to Angular 22.2 with the official migrations. Adopt TypeScript 6.0 and the current `@angular/build` builders, preserve pre-v22 component behavior with explicit eager change detection, convert templates to built-in control flow, and standardize local development on Node 24.15 through `.nvmrc` plus the package engine constraint.
+
+**Rationale:** Angular 19 is out of support, Angular 21 is already in LTS, and Angular 22 is the active supported release. Jumping majors would bypass supported migrations. A recorded Node 24 LTS baseline avoids the unsupported Node 23 runtime previously first on this machine's path, while the maintained build/test builders remove the Angular 22 Webpack/Karma deprecation warning.
+
+**Consequences:** TypeScript 6's typed-array generics require the browser playback edge to copy PCM into an `ArrayBuffer`-backed `Float32Array`, without changing the pure DSP contracts. Stable `@for` keys prevent regenerated view models from recreating controls during Angular's stricter checks. The Angular 22 runtime raises the optimized initial bundle from 489.35 kB to 521.93 kB (114.86 kB estimated transfer), so the warning budget moves from 500 to 550 kB while the 1 MB error limit remains. Cache v23 forces installed copies onto the new runtime. All 166 tests, the unchanged RF benchmark, warning-free production build, and direct server-offline routes pass. Revisit the pinned Node line and bundle warning only with a future framework major or measured delivery regression.
+
 ## 2026-10-05 — Receive defaults to the live job and discloses secondary tools
 
 **Decision:** Make live status, microphone/start control, and immutable raw transcript the complete default `/transcribe` workflow. Collapse per-character evidence and present live copy, edited/session tools, signal detail, verification/calibration, and offline installation as five plainly labeled Operator-tool disclosures. Show Stop and Clear only when relevant, and omit generic automatic-lock guidance until loss, manual lock, or competing tones makes it actionable.

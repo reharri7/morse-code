@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import type { CopyPracticeMode } from '../../application/copy-practice.service';
 import type { RadioPracticeMode } from '../../application/radio-practice.service';
@@ -8,8 +8,9 @@ import { activeKochSymbols, INTERNATIONAL_RECEIVE_COURSE_V1 } from '../../domain
 
 @Component({
   selector: 'app-learn-home-page',
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   templateUrl: './learn-home-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class LearnHomePageComponent implements OnDestroy {

@@ -7,12 +7,18 @@
   <div class="context-grid">
     <div class="clues">
       <h3>What the terms may mean</h3>
-      <p class="empty" *ngIf="!annotations.length">Callsign shapes, operating terms, and prosigns appear here.</p>
-      <article *ngFor="let item of annotations" class="clue">
-        <div class="clue-token"><strong>{{ item.displayText || item.sourceText }}</strong><small>{{ annotationKind(item.kind) }}</small><small>{{ item.confidence | percent:'1.0-0' }} text evidence</small></div>
-        <div><h4>{{ item.title }}</h4><p>{{ item.explanation }}</p></div>
-        <button *ngIf="item.replacement" type="button" (click)="useSuggestion(item)">Use {{ item.replacement }} in edited copy</button>
-      </article>
+      @if (!annotations.length) {
+        <p class="empty">Callsign shapes, operating terms, and prosigns appear here.</p>
+      }
+      @for (item of annotations; track item) {
+        <article class="clue">
+          <div class="clue-token"><strong>{{ item.displayText || item.sourceText }}</strong><small>{{ annotationKind(item.kind) }}</small><small>{{ item.confidence | percent:'1.0-0' }} text evidence</small></div>
+          <div><h4>{{ item.title }}</h4><p>{{ item.explanation }}</p></div>
+          @if (item.replacement) {
+            <button type="button" (click)="useSuggestion(item)">Use {{ item.replacement }} in edited copy</button>
+          }
+        </article>
+      }
     </div>
 
     <div class="edit-copy">
@@ -29,14 +35,18 @@
 
   <details class="saved-sessions">
     <summary><span>Saved sessions</span><small>{{ sessions.length }} stored locally</small></summary>
-    <p class="empty" *ngIf="!sessions.length">No saved sessions yet. Audio is never stored.</p>
-    <article *ngFor="let session of sessions" class="saved-card">
-      <div><time [attr.datetime]="session.savedAt">{{ session.savedAt | date:'medium' }}</time><p>{{ session.rawText || '(empty transcript)' }}</p></div>
-      <div class="saved-actions">
-        <button type="button" (click)="exportSaved(session, 'text')">Text</button>
-        <button type="button" (click)="exportSaved(session, 'json')">JSON</button>
-        <button class="delete" type="button" (click)="deleteSession(session.id)" [attr.aria-label]="'Delete saved session from ' + (session.savedAt | date:'medium')">Delete</button>
-      </div>
-    </article>
+    @if (!sessions.length) {
+      <p class="empty">No saved sessions yet. Audio is never stored.</p>
+    }
+    @for (session of sessions; track session) {
+      <article class="saved-card">
+        <div><time [attr.datetime]="session.savedAt">{{ session.savedAt | date:'medium' }}</time><p>{{ session.rawText || '(empty transcript)' }}</p></div>
+        <div class="saved-actions">
+          <button type="button" (click)="exportSaved(session, 'text')">Text</button>
+          <button type="button" (click)="exportSaved(session, 'json')">JSON</button>
+          <button class="delete" type="button" (click)="deleteSession(session.id)" [attr.aria-label]="'Delete saved session from ' + (session.savedAt | date:'medium')">Delete</button>
+        </div>
+      </article>
+    }
   </details>
 </section>

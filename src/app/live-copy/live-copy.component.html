@@ -1,15 +1,27 @@
 <section class="live-copy" aria-labelledby="live-copy-title">
   <div><p class="eyebrow">Operator copy</p><h2 id="live-copy-title">Copy the live signal yourself</h2><p>Decoder evidence stays out of view until you finish.</p></div>
-  <div *ngIf="state === 'idle'"><button type="button" (click)="start()">Start live copy</button><p class="note" *ngIf="!receiverActive">You can prepare now, then start the microphone when ready.</p></div>
-  <div class="copy-editor" *ngIf="state === 'active'">
+  @if (state === 'idle') {
+    <div><button type="button" (click)="start()">Start live copy</button>@if (!receiverActive) {
+    <p class="note">You can prepare now, then start the microphone when ready.</p>
+  }</div>
+}
+@if (state === 'active') {
+  <div class="copy-editor">
     <label for="operator-copy">Your live copy</label><textarea id="operator-copy" rows="7" [(ngModel)]="userCopy" autocomplete="off"></textarea>
     <label for="operator-reference">Reference text <small>optional</small></label><textarea id="operator-reference" rows="3" [(ngModel)]="referenceText"></textarea><p class="note">A score requires a reference you trust.</p>
     <div class="actions"><button class="primary" type="button" (click)="finish()" [disabled]="!userCopy.trim()">Finish and reveal evidence</button><button type="button" (click)="cancel()">Cancel</button></div>
   </div>
-  <div class="comparison" *ngIf="state === 'review' && comparison as result">
+}
+@if (state === 'review' && comparison; as result) {
+  <div class="comparison">
     <h3>Post-attempt comparison</h3><dl><div><dt>Your copy</dt><dd>{{ result.userCopy || '—' }}</dd></div><div><dt>Immutable raw decoder text</dt><dd>{{ result.rawDecoderText || '—' }}</dd></div><div><dt>Optional reference</dt><dd>{{ result.referenceText || 'Not provided' }}</dd></div></dl>
-    <p *ngIf="result.referenceScore"><strong>Reference differences:</strong> {{ result.referenceScore.characterErrors }}</p><p *ngIf="result.decoderAlignment"><strong>Unscored decoder alignment differences:</strong> {{ result.decoderAlignment.characterErrors }}</p>
+    @if (result.referenceScore) {
+      <p><strong>Reference differences:</strong> {{ result.referenceScore.characterErrors }}</p>
+      }@if (result.decoderAlignment) {
+      <p><strong>Unscored decoder alignment differences:</strong> {{ result.decoderAlignment.characterErrors }}</p>
+    }
     <p>{{ result.explanation }}</p><p>Receiver evidence: character confidence {{ (result.decoderConfidence || 0) * 100 | number:'1.0-0' }}%; timing confidence {{ (result.timingConfidence || 0) * 100 | number:'1.0-0' }}%.</p>
     <button type="button" (click)="start()">Start another live copy</button>
   </div>
+}
 </section>

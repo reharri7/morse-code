@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TrainingSessionService } from '../../application/training-session.service';
 import { activeKochSymbols } from '../../domain/koch-course';
@@ -9,6 +9,7 @@ import { CharacterStatistics } from '../../domain/learning-model';
   selector: 'app-learn-progress-page',
   imports: [CommonModule, RouterLink],
   templateUrl: './learn-progress-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class LearnProgressPageComponent {

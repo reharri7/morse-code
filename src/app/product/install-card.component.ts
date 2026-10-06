@@ -1,10 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+
+import { Component, NgZone, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-install-card',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './install-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './install-card.component.css'
 })
 export class InstallCardComponent implements OnInit, OnDestroy {

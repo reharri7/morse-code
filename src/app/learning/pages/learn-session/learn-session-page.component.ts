@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { getMorseSymbolDefinition } from '../../../core/morse/morse-table';
@@ -9,6 +9,7 @@ import { TrainingSessionService, TrainingSessionSnapshot } from '../../applicati
   selector: 'app-learn-session-page',
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './learn-session-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
 export class LearnSessionPageComponent implements OnDestroy {

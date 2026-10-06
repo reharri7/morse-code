@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { analyzeHamContext, HamContextAnnotation } from '../context/ham-context';
 import { DecodedCharacterEvidence } from '../core/morse/interfaces';
@@ -10,6 +10,7 @@ import { buildSessionJson, buildSessionText } from './session-export';
   selector: 'app-session-tools',
   imports: [CommonModule, FormsModule],
   templateUrl: './session-tools.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './session-tools.component.css'
 })
 export class SessionToolsComponent implements OnChanges {
