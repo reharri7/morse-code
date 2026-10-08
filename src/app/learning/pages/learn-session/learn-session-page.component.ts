@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { getMorseSymbolDefinition } from '../../../core/morse/morse-table';
 import { TrainingSessionService, TrainingSessionSnapshot } from '../../application/training-session.service';
+import { INTERNATIONAL_RECEIVE_COURSE_V1 } from '../../domain/koch-course';
 
 @Component({
   selector: 'app-learn-session-page',
@@ -12,8 +13,9 @@ import { TrainingSessionService, TrainingSessionSnapshot } from '../../applicati
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: '../learning-pages.css'
 })
-export class LearnSessionPageComponent implements OnDestroy {
+export class LearnSessionPageComponent implements AfterViewInit, OnDestroy {
   @ViewChild('answerInput') answerInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('answerChoices') answerChoices?: ElementRef<HTMLElement>;
   @ViewChild('nextButton') nextButton?: ElementRef<HTMLButtonElement>;
 
   snapshot: TrainingSessionSnapshot;
@@ -30,7 +32,7 @@ export class LearnSessionPageComponent implements OnDestroy {
       const previousState = this.snapshot?.state;
       this.snapshot = snapshot;
       if (snapshot.state === 'awaiting-answer' && previousState !== 'awaiting-answer') {
-        queueMicrotask(() => this.answerInput?.nativeElement.focus());
+        this.queueAnswerFocus();
       }
       if (snapshot.state === 'showing-feedback' && previousState !== 'showing-feedback') {
         queueMicrotask(() => this.nextButton?.nativeElement.focus());
@@ -50,11 +52,15 @@ export class LearnSessionPageComponent implements OnDestroy {
       : '';
   }
 
+  get answerOptions(): readonly string[] {
+    return INTERNATIONAL_RECEIVE_COURSE_V1.symbolOrder.slice(0, this.snapshot.profile.currentSymbolCount);
+  }
+
   get announcement(): string {
     switch (this.snapshot.state) {
       case 'preparing': return 'Preparing practice audio.';
       case 'playing': return `Playing character ${this.snapshot.trialNumber} of ${this.snapshot.totalTrials}.`;
-      case 'awaiting-answer': return 'Audio finished. Type the character you heard.';
+      case 'awaiting-answer': return 'Audio finished. Tap or type the character you heard.';
       case 'showing-feedback': return this.snapshot.feedback?.correct ? 'Correct.' : 'Not quite.';
       case 'paused': return 'Practice paused.';
       case 'complete': return 'Practice session complete.';
@@ -99,6 +105,10 @@ export class LearnSessionPageComponent implements OnDestroy {
   replay(): void { void this.training.replay(); }
   retry(): void { void this.training.retryAudio(); }
 
+  ngAfterViewInit(): void {
+    if (this.snapshot.state === 'awaiting-answer') this.queueAnswerFocus();
+  }
+
   @HostListener('document:visibilitychange')
   onVisibilityChange(): void {
     this.training.handleVisibilityChange(document.hidden);
@@ -137,5 +147,16 @@ export class LearnSessionPageComponent implements OnDestroy {
       this.training.pause();
     }
     this.unsubscribe();
+  }
+
+  private queueAnswerFocus(): void {
+    queueMicrotask(() => {
+      if (this.snapshot.state !== 'awaiting-answer') return;
+      if (window.matchMedia?.('(pointer: coarse)').matches) {
+        this.answerChoices?.nativeElement.focus();
+      } else {
+        this.answerInput?.nativeElement.focus();
+      }
+    });
   }
 }

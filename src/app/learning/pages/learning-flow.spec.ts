@@ -427,6 +427,37 @@ describe('M9D learning routes', () => {
     expect(fixture.nativeElement.textContent).toContain('Correct');
   });
 
+  it('offers tap answers without summoning the text field on a coarse pointer', async () => {
+    spyOn(window, 'matchMedia').and.callFake((query: string) => ({
+      matches: query === '(pointer: coarse)',
+      media: query,
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false
+    }) as MediaQueryList);
+    await training.startSession({ seed: 'touch-answers', settings: { characterWpm: 20, effectiveWpm: 10, toneFrequencyHz: 600, sessionLength: 20 } });
+    await navigate('/learn/session');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const choices = [...fixture.nativeElement.querySelectorAll('.answer-choice')] as HTMLButtonElement[];
+    const choiceRegion: HTMLElement = fixture.nativeElement.querySelector('.answer-choices');
+    const typedInput: HTMLInputElement = fixture.nativeElement.querySelector('#practice-answer');
+    expect(choices.map((choice) => choice.textContent?.trim())).toEqual(['K', 'M']);
+    expect(document.activeElement).toBe(choiceRegion);
+    expect(document.activeElement).not.toBe(typedInput);
+
+    const expected = training.snapshot().currentTrial?.expectedSymbolId ?? '';
+    choices.find((choice) => choice.textContent?.trim() === expected)?.click();
+    fixture.detectChanges();
+
+    expect(training.snapshot().feedback?.correct).toBeTrue();
+    expect(fixture.nativeElement.textContent).toContain('Correct');
+  });
+
   it('runs the focused answer and feedback loop without mouse input', async () => {
     await training.startSession({ seed: 'keyboard-loop', settings: { characterWpm: 20, effectiveWpm: 10, toneFrequencyHz: 600, sessionLength: 20 } });
     await navigate('/learn/session');

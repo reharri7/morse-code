@@ -87,6 +87,11 @@ audio { margin: .75rem 0; max-width: 100%; width: 100%; }
 .answer-panel, .feedback-panel, .notice { margin-left: auto; margin-right: auto; max-width: 540px; text-align: left; }
 .answer-row { display: grid; gap: .65rem; grid-template-columns: 1fr auto; }
 .answer-row input { font-size: 1.2rem; text-align: center; text-transform: uppercase; }
+.answer-choices { border: 0; margin: 0; padding: 0; }
+.answer-choices legend { font-size: .77rem; font-weight: 650; margin-bottom: .65rem; padding: 0; }
+.answer-choice-grid { display: grid; gap: .45rem; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.answer-choice { font: 650 1rem ui-monospace, SFMono-Regular, Menlo, monospace; padding-inline: .25rem; }
+.answer-divider { color: var(--quiet); font-size: .68rem; margin: 1.1rem 0; text-align: center; text-transform: uppercase; }
 .feedback-panel.correct { border-top-color: var(--good); }
 .feedback-panel.incorrect { border-top-color: var(--bad); }
 .feedback-symbol { align-items: center; display: flex; gap: .8rem; margin: .8rem 0; }

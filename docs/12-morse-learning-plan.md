@@ -2,6 +2,8 @@
 
 Status: **M9–M11 and M13 complete; M12 software implementation complete with licensed recording validation pending**. The shared timeline, course/progression/persistence foundation, cancellable browser audio, learner routes, adaptive review, groups, words, simulated radio formats, free copy, local recording practice, live receiver-copy bridge, and straight-key fundamentals are implemented without changing the verified M1–M8 transcription baseline.
 
+Mobile receive-answer follow-up (2026-10-07): single-character recognition now lists the full unlocked course set in a stable six-column tap pad. The typed form and direct hardware-key shortcuts remain supported and feed the same first-valid-answer scoring path. Coarse-pointer screens focus the answer group rather than the editable field, avoiding automatic phone-keyboard presentation; tapping the field remains an explicit typing choice. The candidate set does not identify the expected symbol or reveal its Morse pattern before feedback. A focused route check brings the suite to 168 tests; the unchanged RF gate, warning-free 540.29 kB initial build, cache-v26 offline routes, and 390×844 tap/feedback browser check pass.
+
 Practice-hub design follow-up (2026-10-07): the default `/learn` surface now treats character training as the one recommended next action, folds course position and speed into that action card, and presents the seven specialized modes as a responsive three-column desktop/two-column phone grid. Repeated product and section introductions were removed; expanded practice routes retain the guidance needed for their specific interaction, consent, and error states. No learning state machine, scoring, progression, audio, storage, or input behavior changed. All 167 tests, the warning-free 536.04 kB initial build, cache-v25 offline routes, and responsive browser review pass.
 
 ## Product intent
@@ -304,7 +306,7 @@ A persistent top-level **Transcribe / Learn** navigation makes the two first-cla
 Screen requirements:
 
 - The initial character-introduction view may show the letter and dot/dash representation while playing it repeatedly. Recognition trials hide both until feedback.
-- Space/Enter replays only when focus is not in another control; printable supported keys answer; Escape pauses. Touch users get an answer field with an explicit submit path.
+- Space/Enter replays only when focus is not in another control; printable supported keys answer; Escape pauses. Touch users get unlocked-character answer buttons plus an optional answer field with an explicit submit path.
 - Audio state, correctness, and unlocks have text announcements and do not rely on color, pitch animation, or motion alone.
 - A first-run sound check explains that practice audio uses speakers/headphones and does not request microphone permission.
 - Leaving an active session asks only when scored work would be discarded; completed attempts already aggregated in memory may be persisted on orderly exit.

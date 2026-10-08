@@ -2,6 +2,14 @@
 
 Add new entries at the top. Record decisions that would otherwise make a future session revisit product or architecture debate. Include date, decision, rationale, consequences, and any revisitation trigger.
 
+## 2026-10-07 — Mobile receive practice uses a stable unlocked-character answer pad
+
+**Decision:** During single-character receive practice, show every unlocked course character as a labeled tap target in a stable six-column pad. Keep the existing one-character form and direct hardware-key shortcuts. When the primary pointer is coarse, focus the non-editable answer group after playback instead of the text input; tapping the input remains an explicit request to type. Every entry path calls the same first-valid-answer scoring method.
+
+**Rationale:** Automatically focusing an editable field summons the phone keyboard, consumes much of the viewport, and makes a two-choice K/M drill require unnecessary text entry. A course-scoped pad keeps the learner in the listen-and-answer loop and grows predictably with progression. Using the complete unlocked set instead of answer-dependent distractors keeps the visible candidates stable and avoids leaking which choice is expected.
+
+**Consequences:** Tapping and typing produce identical evidence, progression, latency, and feedback. At early course levels tapping is recognition among a small set rather than free recall; retain typing for learners who want that mode and revisit separate evidence only if learning data shows the distinction matters. The expected character and Morse pattern are not identified before submission. One coarse-pointer route check brings the suite to 168 tests; the unchanged RF gate, warning-free 540.29 kB initial build, cache-v26 offline routes, and 390×844 tap/feedback browser review pass. No receiver DSP, raw text, storage schema, microphone behavior, or open physical-acceptance status changes.
+
 ## 2026-10-07 — Default surfaces prioritize the operator's next action
 
 **Decision:** Reduce the default Receive and Practice surfaces to a single task hierarchy. Receive combines state, input, and the relevant Start/Stop action into one console; hides live metrics until capture is active; keeps the immutable transcript dominant; and presents five secondary tools as a compact disclosure grid. Practice presents character training as the one recommended action and the seven specialized modes as a responsive three-column/two-column grid. Remove repeated section headings and explanatory copy while retaining labels at raw-data, privacy, consent, and recovery boundaries.

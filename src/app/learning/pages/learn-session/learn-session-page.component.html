@@ -21,6 +21,15 @@
         <p class="eyebrow">Your turn</p>
         <h1>What character did you hear?</h1>
         <div class="answer-panel">
+          <fieldset #answerChoices class="answer-choices" tabindex="-1">
+            <legend>Tap an unlocked character</legend>
+            <div class="answer-choice-grid">
+              @for (symbol of answerOptions; track symbol) {
+                <button type="button" class="answer-choice" (click)="submitKey(symbol)" [attr.aria-label]="'Answer ' + symbol">{{ symbol }}</button>
+              }
+            </div>
+          </fieldset>
+          <div class="answer-divider" aria-hidden="true"><span>or type</span></div>
           <form (ngSubmit)="submitTypedAnswer()">
             <label for="practice-answer">Type one letter or number</label>
             <div class="answer-row">
@@ -35,7 +44,7 @@
             <button type="button" (click)="replay()">Replay sound</button>
             <button type="button" (click)="pause()">Pause</button>
           </div>
-          <p>Type to answer · Space to replay</p>
+          <p>Tap or type to answer · Space to replay</p>
         </div>
       }
       @if (snapshot.state === 'showing-feedback' && snapshot.feedback; as feedback) {
