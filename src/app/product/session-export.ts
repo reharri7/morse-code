@@ -2,7 +2,7 @@ import { SavedCwSession } from './local-product-store';
 
 export function buildSessionText(session: SavedCwSession): string {
   const lines = [
-    'CW Transcriber session',
+    'Morse Practice receiver session',
     `Saved: ${session.savedAt}`,
     '',
     'RAW TRANSCRIPT — unchanged decoder output',

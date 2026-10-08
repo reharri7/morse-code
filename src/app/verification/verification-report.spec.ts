@@ -7,6 +7,7 @@ describe('verification reports', () => {
     const result = runBuiltInVerification();
     const text = buildVerificationText(result);
     const json = buildVerificationJson(result);
+    expect(text).toContain('Morse Practice receiver verification report');
     expect(text).toContain('RAW ACTUAL');
     expect(text).toContain('Character error rate');
     expect(json).toContain('"pcmIncluded": false');
@@ -25,6 +26,7 @@ describe('verification reports', () => {
     };
     const text = buildAcousticVerificationText(result);
     const json = buildAcousticVerificationJson(result);
+    expect(text).toContain('Morse Practice acoustic receiver verification report');
     expect(text).toContain('REPETITION 3');
     expect(text).toContain('PROVISIONAL');
     expect(json).toContain('"pcmIncluded": false');

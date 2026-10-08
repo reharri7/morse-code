@@ -2,6 +2,14 @@
 
 Add new entries at the top. Record decisions that would otherwise make a future session revisit product or architecture debate. Include date, decision, rationale, consequences, and any revisitation trigger.
 
+## 2026-10-07 — Learning is the product; receiving is a secondary tool
+
+**Decision:** Present the application as **Morse Practice**. Open `/` and unknown routes on `/learn`, link the app mark there, and order the persistent navigation as Learn then Receive. Update route titles, install metadata, offline acceptance, receiver export headings, and primary documentation to the same hierarchy. Preserve `/transcribe`, its complete operator workflows, its local-first guarantees, and all existing storage keys and data formats.
+
+**Rationale:** The implemented learning platform now spans adaptive character recognition, groups, words, simulated radio traffic, free copy, straight-key sending, and paddle practice. The earlier transcriber-first name and default route made the mature learning product appear secondary and sent new users into microphone setup instead of a lesson. Receiving remains valuable as an advanced tool and as the bridge from generated practice to real radio.
+
+**Consequences:** Existing direct links to `/transcribe` continue to work, but fresh launches, installed-app starts, the brand link, and invalid paths lead to learning. The receiver keeps its immutable raw output, verification, saved sessions, and architecture boundaries. Legacy `cw-transcriber.*` storage and cache prefixes remain intentionally stable to avoid losing user data; only the service-worker version advances. All 168 ChromeHeadless tests, the warning-free 540.31 kB Node 24 production build, cache-v27 server-offline routes, and desktop/390×844 visual review pass. Revisit the product name only with user research, not as part of internal module renaming.
+
 ## 2026-10-07 — Mobile receive practice uses a stable unlocked-character answer pad
 
 **Decision:** During single-character receive practice, show every unlocked course character as a labeled tap target in a stable six-column pad. Keep the existing one-character form and direct hardware-key shortcuts. When the primary pointer is coarse, focus the non-editable answer group after playback instead of the text input; tapping the input remains an explicit request to type. Every entry path calls the same first-valid-answer scoring method.

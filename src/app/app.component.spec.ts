@@ -18,23 +18,31 @@ describe('AppComponent routing shell', () => {
     fixture.detectChanges();
   });
 
-  it('redirects the root to the preserved transcription screen', async () => {
+  it('redirects the root to the learning home', async () => {
     await router.navigateByUrl('/');
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    expect(router.url).toBe('/transcribe');
-    expect(fixture.nativeElement.textContent).toContain('Start listening');
-    expect(fixture.nativeElement.textContent).toContain('Transcript');
-  });
-
-  it('offers first-class receive and practice navigation', async () => {
-    await router.navigateByUrl('/learn');
     await fixture.whenStable();
     fixture.detectChanges();
 
     expect(router.url).toBe('/learn');
     expect(fixture.nativeElement.textContent).toContain('Character practice');
-    expect(fixture.nativeElement.querySelector('nav a.active')?.textContent).toContain('Practice');
+    expect(fixture.nativeElement.textContent).toContain('Practice modes');
+
+    await router.navigateByUrl('/missing-route');
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(router.url).toBe('/learn');
+  });
+
+  it('presents learning first and keeps receive available', async () => {
+    await router.navigateByUrl('/learn');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(router.url).toBe('/learn');
+    expect(fixture.nativeElement.querySelector('.app-mark')?.textContent).toContain('Morse Practice');
+    expect(fixture.nativeElement.textContent).toContain('Character practice');
+    expect(fixture.nativeElement.querySelector('nav a:first-child')?.textContent).toContain('Learn');
+    expect(fixture.nativeElement.querySelector('nav a.active')?.textContent).toContain('Learn');
+    expect(fixture.nativeElement.querySelector('nav a:last-child')?.textContent).toContain('Receive');
   });
 });

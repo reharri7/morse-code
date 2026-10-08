@@ -8,7 +8,7 @@ Practice-hub design follow-up (2026-10-07): the default `/learn` surface now tre
 
 ## Product intent
 
-Morse Learning is a first-class, local-first part of the app, inspired by the quick listen/type/feedback loop of Monkey Morse without depending on Monkeytype code or services. The goal is to teach recognition of a character as an audible rhythm and then carry that skill into ordinary CW traffic.
+Morse Learning is the primary, local-first purpose of the app, inspired by the quick listen/type/feedback loop of Monkey Morse without depending on Monkeytype code or services. The installed app and root URL open on learning; live transcription remains a top-level secondary tool for carrying learned skill into ordinary CW traffic. The goal is to teach recognition of a character as an audible rhythm and then develop practical receiving and sending fluency.
 
 The primary loop is:
 

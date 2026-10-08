@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CW Transcriber">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Morse Practice">
   <rect width="512" height="512" fill="#101b17"/>
   <path d="M72 344h56v-64h40v64h104v-64h40v64h128" fill="none" stroke="#b6f36b" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="108" cy="224" r="20" fill="#b6f36b"/>

@@ -50,7 +50,7 @@ The M8B speaker-to-microphone card is implemented and explicitly opt-in. It requ
 
 ## Morse Learning routes — implemented M9–M13
 
-Learning becomes a first-class sibling of transcription rather than another card on the crowded operator screen. Angular Router will preserve the current UI at `/transcribe` and add `/learn`, `/learn/setup`, `/learn/session`, `/learn/results`, and `/learn/progress`. Persistent top-level navigation labels the two modes clearly; `/` redirects to `/transcribe` so the current product remains the default.
+Learning is the primary product rather than another card on the operator screen. Angular Router preserves the full receiver at `/transcribe` and provides `/learn`, `/learn/setup`, `/learn/session`, `/learn/results`, and `/learn/progress`. The app brand links to `/learn`, persistent navigation lists Learn before Receive, and `/` plus unknown routes redirect to `/learn`. The receiver remains directly addressable and fully functional without competing with the learner's default path.
 
 The training screen is deliberately quieter than the operator screen. During a scored trial it presents sound, an answer control, replay/pause/exit, progress count, and accessible state text. The answer, dot/dash representation, waveform, and visual timing stay hidden until the learner answers or explicitly reveals. Character introduction and post-answer feedback may show them as teaching aids. Keyboard, touch, reduced-motion, and screen-reader flows are release criteria rather than later polish.
 

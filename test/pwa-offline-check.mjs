@@ -60,7 +60,7 @@ try {
       workletCached: Boolean(await caches.match('./cw-audio-processor.js'))
     };
   })()`);
-  if (online.title !== 'Transcribe — CW Transcriber' || online.path !== '/transcribe' ||
+  if (online.title !== 'Learn Morse — Morse Practice' || online.path !== '/learn' ||
       !online.controlled || !online.workletCached) {
     throw new Error(`Online installation check failed: ${JSON.stringify(online)}`);
   }
@@ -129,7 +129,7 @@ try {
       controlled: Boolean(navigator.serviceWorker?.controller)
     };
   })()`);
-  if (freeCopy.title !== 'Free copy — CW Transcriber' || freeCopy.heading !== 'Free copy' ||
+  if (freeCopy.title !== 'Free copy — Morse Practice' || freeCopy.heading !== 'Free copy' ||
       !freeCopy.hasGeneratedPractice || !freeCopy.hasLocalRecording || !freeCopy.controlled) {
     throw new Error(`Offline free-copy route check failed: ${JSON.stringify(freeCopy)}`);
   }
@@ -150,7 +150,7 @@ try {
       controlled: Boolean(navigator.serviceWorker?.controller)
     };
   })()`);
-  if (keying.title !== 'Keying practice — CW Transcriber' || keying.heading !== 'Learn to key CW' ||
+  if (keying.title !== 'Keying practice — Morse Practice' || keying.heading !== 'Learn to key CW' ||
       !keying.hasKeyboardKey || !keying.hasCheckAction || !keying.controlled) {
     throw new Error(`Offline keying route check failed: ${JSON.stringify(keying)}`);
   }
@@ -183,7 +183,7 @@ try {
       controlled: Boolean(navigator.serviceWorker?.controller)
     };
   })()`);
-  if (offline.title !== 'Transcribe — CW Transcriber' || offline.heading !== 'Copy CW' || !offline.hasDecoder ||
+  if (offline.title !== 'Receive CW — Morse Practice' || offline.heading !== 'Copy CW' || !offline.hasDecoder ||
       !offline.hasVerification || !offline.hasAcousticTest || !offline.quickVerificationPassed ||
       !offline.retainedSession || !offline.retainedManualPitch) {
     throw new Error(`Offline reload check failed: ${JSON.stringify(offline)}`);

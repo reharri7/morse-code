@@ -2,30 +2,32 @@
 
 ## Vision
 
-Put a phone or laptop near a radio, select or acquire a CW signal, and receive a real-time, understandable transcript. Also give a learner an audio-first path from recognizing their first two Morse characters to copying ordinary amateur-radio traffic. The app should show what it heard—not merely assert text—and use the same Morse language and timing model when it generates practice audio.
+Give a learner an audio-first path from recognizing their first two Morse characters to copying and sending ordinary amateur-radio traffic. Learning is the product's primary purpose and the default installed experience. A capable real-time receiver remains available as a secondary tool for live copy, verification, and the transition from generated practice to radio audio.
 
-The essential local path is:
+The app should teach audible rhythm rather than visual memorization, keep progress local, and use the same Morse language and timing model for every generated exercise. When it receives live audio, it should show what it heard—not merely assert text—and preserve uncertainty and raw decoder truth.
+
+The primary learning path is:
+
+```text
+known symbol → shared Morse timing → generated CW → learner answer → local per-character progress
+```
+
+The secondary receiver path is:
 
 ```text
 microphone → PCM → tone/no-tone evidence → timings → Morse symbols → raw transcript
 ```
 
-It works offline once installed and requires no server, cloud model, account, or LLM for basic transcription.
-
-The planned learning path is:
-
-```text
-known symbol → shared Morse timing → generated CW → typed answer → local per-character progress
-```
+Both paths work offline once installed and require no server, cloud model, account, or LLM.
 
 ## Product promises
 
-- Decode International Morse/CW locally in real time on modern browsers.
+- Teach receive/copy skill with Koch-style character progression, Farnsworth spacing, immediate feedback, and local per-character progress.
+- Teach straight-key and paddle sending practice with local input, sidetone, and explicit pattern/rhythm feedback.
+- Decode International Morse/CW locally in real time as an advanced receiving tool on modern browsers.
 - Preserve the evidence chain: signal/timing → dots and dashes → characters → raw transcript.
 - Adapt to ordinary operator variation, modest frequency drift, noise, and practical radio audio over time.
 - Offer ham-radio-aware annotations separately from raw decoding.
-- Teach receive/copy skill with Koch-style character progression, Farnsworth spacing, immediate feedback, and local per-character progress.
-- Teach straight-key sending fundamentals with local keyboard/touch input, sidetone, and explicit pattern/rhythm feedback.
 - Reuse one canonical Morse alphabet and timing representation across generated practice, deterministic verification, and receive transcription.
 - Be useful on a desktop today and installable/mobile-friendly as a PWA later.
 
@@ -41,7 +43,8 @@ known symbol → shared Morse timing → generated CW → typed answer → local
 ## Success measures
 
 - Correctness: character error rate (CER), word error rate (WER), unknown-symbol rate, and exact-message rate on versioned labeled fixtures.
-- Usability: a user can choose a microphone/signal, see lock state and quality, start/stop/reset, read raw text, and export a local transcript.
+- Usability: a learner can open the installed app directly into a clear next practice action, while the receiver remains one top-level action away.
 - Trust: a user can distinguish raw output, uncertainty, and optional contextual suggestions at a glance.
-- Learning: a new user can complete an audio-only hear-and-type session, retain progress across offline restarts, and advance only when documented unassisted accuracy criteria are met.
+- Learning: a new user can complete an audio-only hear-and-answer session, retain progress across offline restarts, and advance only when documented unassisted accuracy criteria are met.
+- Receiving: a user can choose a microphone/signal, see lock state and quality, start/stop/reset, read raw text, and export a local transcript.
 - Sending: a user can key an unlocked character by keyboard or touch and distinguish pattern correctness from timing quality without changing receive progress.

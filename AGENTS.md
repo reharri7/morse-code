@@ -1,6 +1,6 @@
-# CW Transcriber — Instructions for Future Codex Sessions
+# Morse Practice — Instructions for Future Codex Sessions
 
-This repository is a local-first Angular application for real-time CW/Morse transcription. Treat `docs/` as the project plan and update it whenever implementation changes a milestone, interface, decision, or test result.
+This repository is a local-first Angular application for Morse learning with real-time CW transcription as a secondary tool. Treat `docs/` as the project plan and update it whenever implementation changes a milestone, interface, decision, or test result.
 
 ## Start-of-session workflow
 
@@ -22,6 +22,7 @@ This repository is a local-first Angular application for real-time CW/Morse tran
 
 ## Current verified baseline (2026-10-06)
 
+- Learning-first product revision (2026-10-07): the user-facing product is Morse Practice; `/`, the app mark, installed launch, and unknown routes lead to `/learn`, while Learn precedes Receive in persistent navigation. `/transcribe` remains a complete secondary receiver tool. User-facing metadata and receiver report headings follow the new identity, and existing `cw-transcriber.*` storage keys remain stable to preserve local data. All 168 ChromeHeadless tests, the warning-free 540.31 kB Node 24 build, cache-v27 offline routes, and desktop/390×844 browser review pass.
 - M1 is implemented in `src/app/core/morse/`; its exact synthetic check remains visible in the M6 live operator UI.
 - The test suite passes the canonical exact decode: `CQ CQ DE K6RHE` → generated audio → `CQ CQ DE K6RHE`.
 - M2 code and automated checks are implemented: microphone/device lifecycle, outputless AudioWorklet framing, bounded streaming decode, and live diagnostics. On 2026-09-15 the user reported that the MacBook's built-in microphone successfully decoded a known CW transmission. Repeated start/stop cleanup and device-loss behavior still need live confirmation before the final M2 checkbox closes.

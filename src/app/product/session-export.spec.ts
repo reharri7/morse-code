@@ -13,6 +13,7 @@ describe('session export', () => {
 
   it('labels raw, edited, and contextual text separately in text exports', () => {
     const output = buildSessionText(record);
+    expect(output).toContain('Morse Practice receiver session');
     expect(output).toContain('RAW TRANSCRIPT');
     expect(output).toContain('EDITED COPY');
     expect(output).toContain('CONTEXT NOTES');

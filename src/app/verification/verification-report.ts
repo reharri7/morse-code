@@ -3,7 +3,7 @@ import { AcousticVerificationResult } from './acoustic-verification';
 
 export function buildVerificationText(result: VerificationResult): string {
   const lines = [
-    'CW Transcriber verification report',
+    'Morse Practice receiver verification report',
     `Completed: ${result.completedAt}`,
     `Case: ${result.case.id} (version ${result.case.version})`,
     `Source: ${result.case.sourceKind} — ${result.sourceName}`,
@@ -38,7 +38,7 @@ export function buildVerificationJson(result: VerificationResult): string {
 
 export function buildAcousticVerificationText(result: AcousticVerificationResult): string {
   const lines = [
-    'CW Transcriber acoustic verification report',
+    'Morse Practice acoustic receiver verification report',
     `Completed: ${result.completedAt}`,
     `Microphone: ${result.deviceLabel}`,
     'Calibration: PROVISIONAL — target MacBook baseline not yet measured',

@@ -7,60 +7,60 @@ import { CopyPracticePageComponent } from './learning/pages/copy-practice/copy-p
 import { RadioPracticePageComponent } from './learning/pages/radio-practice/radio-practice-page.component';
 
 export const APP_ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'transcribe' },
+  { path: '', pathMatch: 'full', redirectTo: 'learn' },
   {
     path: 'transcribe',
     loadComponent: () => import('./transcription/transcription-page.component')
       .then((module) => module.TranscriptionPageComponent),
-    title: 'Transcribe — CW Transcriber'
+    title: 'Receive CW — Morse Practice'
   },
   {
     path: 'learn',
     loadComponent: () => import('./learning/pages/learn-home/learn-home-page.component')
       .then((module) => module.LearnHomePageComponent),
-    title: 'Learn Morse — CW Transcriber'
+    title: 'Learn Morse — Morse Practice'
   },
   {
     path: 'learn/setup',
     component: LearnSetupPageComponent,
-    title: 'Practice setup — CW Transcriber'
+    title: 'Practice setup — Morse Practice'
   },
   {
     path: 'learn/copy',
     component: CopyPracticePageComponent,
-    title: 'Copy practice — CW Transcriber'
+    title: 'Copy practice — Morse Practice'
   },
   {
     path: 'learn/radio',
     component: RadioPracticePageComponent,
-    title: 'Simulated radio practice — CW Transcriber'
+    title: 'Simulated radio practice — Morse Practice'
   },
   {
     path: 'learn/free-copy',
     loadComponent: () => import('./learning/pages/free-copy/free-copy-page.component')
       .then((module) => module.FreeCopyPageComponent),
-    title: 'Free copy — CW Transcriber'
+    title: 'Free copy — Morse Practice'
   },
   {
     path: 'learn/keying',
     loadComponent: () => import('./learning/pages/keying-practice/keying-practice-page.component')
       .then((module) => module.KeyingPracticePageComponent),
-    title: 'Keying practice — CW Transcriber'
+    title: 'Keying practice — Morse Practice'
   },
   {
     path: 'learn/session',
     component: LearnSessionPageComponent,
-    title: 'Morse practice — CW Transcriber'
+    title: 'Morse practice — Morse Practice'
   },
   {
     path: 'learn/results',
     component: LearnResultsPageComponent,
-    title: 'Practice results — CW Transcriber'
+    title: 'Practice results — Morse Practice'
   },
   {
     path: 'learn/progress',
     component: LearnProgressPageComponent,
-    title: 'Learning progress — CW Transcriber'
+    title: 'Learning progress — Morse Practice'
   },
-  { path: '**', redirectTo: 'transcribe' }
+  { path: '**', redirectTo: 'learn' }
 ];
