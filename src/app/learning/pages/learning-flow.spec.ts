@@ -136,9 +136,9 @@ describe('M9D learning routes', () => {
 
   it('starts a selected copy mode directly from the practice menu', async () => {
     await navigate('/learn');
-    fixture.debugElement.queryAll(By.css('.practice-option'))
+    (fixture.debugElement.queryAll(By.css('.practice-option'))
       .find((option) => option.nativeElement.textContent.includes('Groups'))
-      ?.triggerEventHandler('click');
+      ?.nativeElement as HTMLAnchorElement | undefined)?.click();
     await fixture.whenStable();
     fixture.detectChanges();
 

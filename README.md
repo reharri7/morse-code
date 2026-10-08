@@ -2,6 +2,8 @@
 
 A local-first Angular 22 and TypeScript platform for learning Morse code. The default experience is an adaptive audio-first course with character, group, word, simulated radio, free-copy, straight-key, and paddle practice. A full real-time CW receiver remains available as a secondary tool at `/transcribe`, with immutable raw decoding, offline verification, local session tools, and no cloud dependency. Learning and receiving share one canonical Morse alphabet and timing engine without allowing practice answers or contextual hints to alter raw decoder output. Character receive practice offers a tap pad of unlocked answers without automatically opening the mobile keyboard; typed and hardware-key answers remain available. One authorized over-the-air recording run remains before M12 fully closes, and the outstanding physical receiver/calibration checks remain documented honestly.
 
+The production shell includes origin-neutral search, canonical, robots, Open Graph, large-card, and WebApplication metadata. Stable public routes are indexable; personalized practice state is not. A deployment should add a hostname-bound sitemap and webmaster-tool submission once its final public origin is known.
+
 ## Continuing the project
 
 The complete autonomous implementation guide lives in [docs/README.md](docs/README.md). Future Codex sessions should begin with [AGENTS.md](AGENTS.md), select the next incomplete milestone in [docs/03-roadmap.md](docs/03-roadmap.md), implement and test it, then update the roadmap and [decision log](docs/10-decision-log.md). M1 and M4–M7 are verified complete. M2 and M3 code plus automated acceptance are implemented, and basic real microphone decoding has succeeded. Remaining physical edge cases and labeled over-the-air recordings are still honest validation gaps. The implemented learning architecture, routes, models, algorithms, and remaining acceptance gates are documented in [docs/12-morse-learning-plan.md](docs/12-morse-learning-plan.md).
@@ -45,6 +47,7 @@ CQ CQ DE K6RHE → generated samples → Goertzel tone detection → timing even
 - `public/cw-audio-processor.js` frames mono PCM with sample rate and monotonic sample position; it defines no Morse semantics and has no audio output.
 - `src/app/context/ham-context.ts` recognizes a bounded offline vocabulary and callsign shapes without mutating raw text or making network requests.
 - `src/app/product/` owns local settings/sessions, edited copies, exports, and install/offline presentation.
+- `src/app/product/seo.service.ts` owns base-aware route metadata and keeps personalized/transient practice routes out of the search index.
 - `src/app/verification/` owns shared raw scoring/alignment, production-path deterministic/file runs, WAV handling, stage results, and PCM-free reports.
 - `src/app/verification/acoustic-*.ts` owns guided test-only playback/capture coordination; live transcription remains outputless.
 - `public/sw.js` and `public/manifest.webmanifest` provide the versioned offline app shell and install metadata.

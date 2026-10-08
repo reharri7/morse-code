@@ -28,21 +28,21 @@
   <section class="practice-library" aria-labelledby="practice-library-title">
     <h2 id="practice-library-title">Practice modes</h2>
     <div class="practice-menu">
-      <button type="button" class="practice-option" (click)="startCopy('groups')" [disabled]="!!launching">
+      <a class="practice-option" routerLink="/learn/copy" [queryParams]="{ mode: 'groups', start: 1 }">
         <span><strong>Groups</strong><small>Five characters</small></span><span aria-hidden="true">→</span>
-      </button>
-      <button type="button" class="practice-option" (click)="startCopy('words')" [disabled]="!!launching">
+      </a>
+      <a class="practice-option" routerLink="/learn/copy" [queryParams]="{ mode: 'words', start: 1 }">
         <span><strong>Words</strong><small>Unlocked vocabulary</small></span><span aria-hidden="true">→</span>
-      </button>
-      <button type="button" class="practice-option" (click)="startRadio('callsigns')" [disabled]="!!launching">
+      </a>
+      <a class="practice-option" routerLink="/learn/radio" [queryParams]="{ mode: 'callsigns', start: 1 }">
         <span><strong>Callsigns</strong><small>Station IDs</small></span><span aria-hidden="true">→</span>
-      </button>
-      <button type="button" class="practice-option" (click)="startRadio('contest')" [disabled]="!!launching">
+      </a>
+      <a class="practice-option" routerLink="/learn/radio" [queryParams]="{ mode: 'contest', start: 1 }">
         <span><strong>Contest</strong><small>Reports and serials</small></span><span aria-hidden="true">→</span>
-      </button>
-      <button type="button" class="practice-option" (click)="startRadio('qso')" [disabled]="!!launching">
+      </a>
+      <a class="practice-option" routerLink="/learn/radio" [queryParams]="{ mode: 'qso', start: 1 }">
         <span><strong>QSO</strong><small>Radio contact</small></span><span aria-hidden="true">→</span>
-      </button>
+      </a>
       <a class="practice-option" routerLink="/learn/free-copy">
         <span><strong>Free copy</strong><small>Passages & recordings</small></span><span aria-hidden="true">→</span>
       </a>

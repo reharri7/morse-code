@@ -22,6 +22,7 @@ This repository is a local-first Angular application for Morse learning with rea
 
 ## Current verified baseline (2026-10-06)
 
+- SEO/Open Graph revision (2026-10-08): the static shell now exposes descriptive search metadata, complete generic Open Graph and large-card tags, WebApplication JSON-LD, crawl permission, and a reviewed 1200×630 share image with both secondary taglines removed at the user's direction. Route navigation updates the title, description, canonical URL, robots policy, Open Graph, and X card against the deployed base URL; active/results/setup/progress routes are `noindex`, while public learning, keying, free-copy, and receiver pages are indexable. Practice modes use crawlable links. All 169 ChromeHeadless tests, the unchanged RF gate, a warning-free 546.58 kB Node 24 build, and cache-v28 production/offline metadata and route checks pass. No production hostname is recorded, so a hostname-bound sitemap and Search Console submission remain deployment tasks rather than guessed source values.
 - Learning-first product revision (2026-10-07): the user-facing product is Morse Practice; `/`, the app mark, installed launch, and unknown routes lead to `/learn`, while Learn precedes Receive in persistent navigation. `/transcribe` remains a complete secondary receiver tool. User-facing metadata and receiver report headings follow the new identity, and existing `cw-transcriber.*` storage keys remain stable to preserve local data. All 168 ChromeHeadless tests, the warning-free 540.31 kB Node 24 build, cache-v27 offline routes, and desktop/390×844 browser review pass.
 - M1 is implemented in `src/app/core/morse/`; its exact synthetic check remains visible in the M6 live operator UI.
 - The test suite passes the canonical exact decode: `CQ CQ DE K6RHE` → generated audio → `CQ CQ DE K6RHE`.
@@ -85,6 +86,7 @@ This repository is a local-first Angular application for Morse learning with rea
 - `src/app/learning/domain/keying-analysis.ts`, `infrastructure/keying-sidetone.service.ts`, and `pages/keying-practice/`: M13 pure straight-key feedback, browser sidetone edge, and keyboard/touch practice UI.
 - `src/app/live-copy/`: M12 receiver-side text workspace that cannot mutate DSP or raw decoder output.
 - `src/app/app.routes.ts` and `src/app/learning/pages/`: M9D transcription/learning routes and accessible learner screens.
+- `src/app/product/seo.service.ts`, `src/index.html`, and `public/icons/morse-practice-social.*`: base-aware route metadata, static crawler/social metadata, and the Open Graph share asset.
 - `src/app/transcription/transcription-page.component.*`: the preserved M6–M8 operator product at `/transcribe`.
 - `src/app/core/morse/cw-pipeline.spec.ts`: canonical M1 acceptance test.
 - `src/app/core/morse/streaming-cw-decoder.ts`: browser-free M2 streaming composition.

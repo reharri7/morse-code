@@ -13,6 +13,20 @@ let server;
 
 try {
   await stat(join(browserRoot, 'index.html'));
+  const shellMarkup = await readFile(join(browserRoot, 'index.html'), 'utf8');
+  const requiredSeoMarkup = [
+    'property="og:title"', 'property="og:type"', 'property="og:url"',
+    'property="og:image"', 'property="og:image:alt"',
+    'name="twitter:card" content="summary_large_image"',
+    'type="application/ld+json"'
+  ];
+  if (requiredSeoMarkup.some((markup) => !shellMarkup.includes(markup))) {
+    throw new Error('Production index is missing required search or social metadata.');
+  }
+  const socialImage = await readFile(join(browserRoot, 'icons/morse-practice-social.png'));
+  if (socialImage.readUInt32BE(16) !== 1200 || socialImage.readUInt32BE(20) !== 630) {
+    throw new Error('Open Graph image must be a 1200×630 PNG.');
+  }
   server = createStaticServer(browserRoot);
   await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
   console.log('offline-check: server ready');
@@ -57,11 +71,22 @@ try {
         waiting: item.waiting?.state ?? null
       })),
       caches: await caches.keys(),
-      workletCached: Boolean(await caches.match('./cw-audio-processor.js'))
+      workletCached: Boolean(await caches.match('./cw-audio-processor.js')),
+      socialImageCached: Boolean(await caches.match('./icons/morse-practice-social.png')),
+      canonicalPath: new URL(document.querySelector("link[rel='canonical']")?.href ?? location.href).pathname,
+      description: document.querySelector("meta[name='description']")?.content,
+      robots: document.querySelector("meta[name='robots']")?.content,
+      openGraphTitle: document.querySelector("meta[property='og:title']")?.content,
+      openGraphImageWidth: document.querySelector("meta[property='og:image:width']")?.content,
+      twitterCard: document.querySelector("meta[name='twitter:card']")?.content
     };
   })()`);
-  if (online.title !== 'Learn Morse — Morse Practice' || online.path !== '/learn' ||
-      !online.controlled || !online.workletCached) {
+  if (online.title !== 'Learn Morse Code — Morse Practice' || online.path !== '/learn' ||
+      !online.controlled || !online.workletCached || !online.socialImageCached ||
+      online.canonicalPath !== '/learn' || !online.description?.includes('adaptive listening drills') ||
+      online.robots !== 'index, follow, max-image-preview:large' ||
+      online.openGraphTitle !== 'Learn Morse Code — Morse Practice' ||
+      online.openGraphImageWidth !== '1200' || online.twitterCard !== 'summary_large_image') {
     throw new Error(`Online installation check failed: ${JSON.stringify(online)}`);
   }
   const retainedProductData = {
@@ -129,7 +154,7 @@ try {
       controlled: Boolean(navigator.serviceWorker?.controller)
     };
   })()`);
-  if (freeCopy.title !== 'Free copy — Morse Practice' || freeCopy.heading !== 'Free copy' ||
+  if (freeCopy.title !== 'Morse Code Free Copy Practice — Morse Practice' || freeCopy.heading !== 'Free copy' ||
       !freeCopy.hasGeneratedPractice || !freeCopy.hasLocalRecording || !freeCopy.controlled) {
     throw new Error(`Offline free-copy route check failed: ${JSON.stringify(freeCopy)}`);
   }
@@ -150,7 +175,7 @@ try {
       controlled: Boolean(navigator.serviceWorker?.controller)
     };
   })()`);
-  if (keying.title !== 'Keying practice — Morse Practice' || keying.heading !== 'Learn to key CW' ||
+  if (keying.title !== 'Morse Code Keying Practice — Morse Practice' || keying.heading !== 'Learn to key CW' ||
       !keying.hasKeyboardKey || !keying.hasCheckAction || !keying.controlled) {
     throw new Error(`Offline keying route check failed: ${JSON.stringify(keying)}`);
   }
@@ -183,7 +208,7 @@ try {
       controlled: Boolean(navigator.serviceWorker?.controller)
     };
   })()`);
-  if (offline.title !== 'Receive CW — Morse Practice' || offline.heading !== 'Copy CW' || !offline.hasDecoder ||
+  if (offline.title !== 'CW Receiver & Morse Code Transcriber — Morse Practice' || offline.heading !== 'Copy CW' || !offline.hasDecoder ||
       !offline.hasVerification || !offline.hasAcousticTest || !offline.quickVerificationPassed ||
       !offline.retainedSession || !offline.retainedManualPitch) {
     throw new Error(`Offline reload check failed: ${JSON.stringify(offline)}`);

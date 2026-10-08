@@ -1,8 +1,6 @@
 
 import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import type { CopyPracticeMode } from '../../application/copy-practice.service';
-import type { RadioPracticeMode } from '../../application/radio-practice.service';
 import { TrainingSessionService, TrainingSessionSnapshot } from '../../application/training-session.service';
 import { activeKochSymbols, INTERNATIONAL_RECEIVE_COURSE_V1 } from '../../domain/koch-course';
 
@@ -47,14 +45,6 @@ export class LearnHomePageComponent implements OnDestroy {
     this.launching = 'characters';
     void this.training.startSession().finally(() => this.launching = '');
     void this.router.navigateByUrl('/learn/session');
-  }
-
-  startCopy(mode: CopyPracticeMode): void {
-    void this.router.navigate(['/learn/copy'], { queryParams: { mode, start: 1 } });
-  }
-
-  startRadio(mode: RadioPracticeMode): void {
-    void this.router.navigate(['/learn/radio'], { queryParams: { mode, start: 1 } });
   }
 
   ngOnDestroy(): void {

@@ -37,8 +37,10 @@ Implementation details:
 - Saved records keep timestamp, raw text, edited text, context annotations, device label, locked tone, character speed, and effective speed. The UI displays stored records locally and supports per-record deletion and export.
 - Text export labels raw, edited, and context sections. JSON export carries `schemaVersion: 1` and distinct `rawText`, `editedText`, `annotations`, and metadata.
 - `manifest.webmanifest` supplies standalone display, theme, description, and opaque 192/512 icons. `sw.js` derives hashed production assets from the built index, precaches the audio worklet and product shell, removes older CW caches on activation, and uses network-first updates with cache fallback.
+- `index.html` supplies crawler-readable default descriptions, robots policy, Open Graph/large-card fields, and WebApplication JSON-LD. Route-owned metadata then provides unique titles/descriptions, one canonical URL, and explicit index/noindex policy without entering DSP or learning state. Canonical and social-image URLs resolve from the deployed base rather than a guessed hostname.
+- The graphite/brass 1200×630 `morse-practice-social.png` is the social preview source; the editable SVG lives beside it. Public mode destinations use anchors so crawlers can discover them. Transient and personalized practice routes remain followable but are not indexed.
 - The install card reports online/offline readiness and surfaces the browser-provided install prompt without pretending installation is available when the browser has not offered it.
-- `npm run test:offline` starts the built app and an isolated production Chrome profile, verifies active service-worker control and cached worklet, persists a session and manual setting, removes the server, navigates again, and requires the full decoder plus retained data to render.
+- `npm run test:offline` starts the built app and an isolated production Chrome profile, verifies static/routed search and social metadata, share-image dimensions/cache, active service-worker control and cached worklet, persists a session and manual setting, removes the server, navigates again, and requires the full decoder plus retained data to render.
 
 ## Layered verification (M8A) — implemented 2026-09-16
 

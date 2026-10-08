@@ -1,5 +1,5 @@
-const CACHE_NAME = 'cw-transcriber-shell-v27';
-const REQUIRED_ASSETS = ['./', './index.html', './manifest.webmanifest', './cw-audio-processor.js', './icons/cw-icon-192.png', './icons/cw-icon-512.png'];
+const CACHE_NAME = 'cw-transcriber-shell-v28';
+const REQUIRED_ASSETS = ['./', './index.html', './manifest.webmanifest', './cw-audio-processor.js', './icons/cw-icon-192.png', './icons/cw-icon-512.png', './icons/morse-practice-social.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(cacheApplicationShell());
