@@ -30,7 +30,7 @@ nav a.active { border-bottom-color: var(--signal); color: var(--ink); }
 #main-content:focus { outline: none; }
 
 @media (max-width: 620px) {
-  .app-bar { min-height: 54px; }
+  .app-bar { min-height: 54px; padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }
   .app-mark strong { display: none; }
   nav { gap: 1rem; }
 }

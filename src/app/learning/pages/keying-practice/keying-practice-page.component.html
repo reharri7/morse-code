@@ -1,14 +1,14 @@
-<main class="learn-page narrow">
+<main class="learn-page narrow keying-page">
   <a class="back-link" routerLink="/learn">← Back to practice</a>
   <p class="eyebrow">Sending practice</p>
   <h1>Learn to key CW</h1>
-  <p class="lead">Practice sending with a straight key or USB paddle. Pause after the final mark and feedback appears automatically.</p>
+  <p class="lead">Send CW by touch, keyboard, or USB paddle. Feedback appears after each character.</p>
 
-  <section class="panel">
-    <div class="field">
-      <label for="keying-input">Input</label>
+  <section class="panel keying-controls">
+    <div class="field keying-input-field">
+      <label for="keying-input">Keying method</label>
       <select id="keying-input" [(ngModel)]="inputMode" (ngModelChange)="inputChanged()">
-        <option value="straight">Straight key — Space or touch</option>
+        <option value="straight">Touch key or keyboard</option>
         <option value="paddle">USB paddle — keyboard or mouse buttons</option>
       </select>
     </div>
@@ -106,9 +106,10 @@
           class="keying-pad"
           [class.active]="keyIsDown"
           [attr.aria-pressed]="keyIsDown"
+          aria-label="Touch key. Press and hold to send a mark."
           (pointerdown)="beginKeying($event)">
-          <strong>{{ keyIsDown ? 'KEY DOWN' : 'HOLD TO KEY' }}</strong>
-          <span>or hold Space</span>
+          <strong>{{ keyIsDown ? 'KEY DOWN' : 'PRESS & HOLD' }}</strong>
+          <span>Touch here or hold Space</span>
         </button>
       }
       @if (inputMode === 'paddle') {
@@ -119,7 +120,7 @@
         <span>Your marks</span>
         <strong>{{ displaySentPattern }}</strong>
       </div>
-      <p class="status-line">{{ status }}</p>
+      <p class="status-line" role="status" aria-live="polite">{{ status }}</p>
       @if (audioError) {
         <p class="error">{{ audioError }}</p>
       }

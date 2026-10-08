@@ -16,8 +16,8 @@ describe('TranscriptionPageComponent', () => {
 
     expect(text).toContain('Ready to listen');
     expect(text).toContain('Start listening');
-    expect(text).toContain('Live transcription');
-    expect(text).toContain('What the decoder heard');
+    expect(text).toContain('Copy CW');
+    expect(text).toContain('Transcript');
     expect(text).toContain('Recent characters');
     expect(text).toContain('Tones and spaces');
     expect(text).toContain('Signal troubleshooting');
@@ -147,7 +147,7 @@ describe('TranscriptionPageComponent', () => {
     fixture.detectChanges();
 
     const text = fixture.nativeElement.textContent;
-    expect(text).toContain('Raw transcript');
+    expect(text).toContain('Raw · unchanged');
     expect(text).toContain('Character evidence');
     expect(text).toContain('·−');
     expect(text).toContain('not a known Morse character');

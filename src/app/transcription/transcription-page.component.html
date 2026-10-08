@@ -1,34 +1,32 @@
 <main>
-  <header class="brand-header">
-    <div>
-      <p class="eyebrow">Receive</p>
-      <h1>Live transcription</h1>
-      <p class="intro">Start listening. Tone lock and speed adjust automatically.</p>
-    </div>
+  <header class="page-intro">
+    <div><p class="eyebrow">Receiver</p><h1>Copy CW</h1></div>
+    <p>Live, local transcription from your microphone.</p>
   </header>
 
-  <section class="operator-status" [attr.data-state]="operatorStateKey" aria-live="polite" aria-atomic="true">
-    <div class="status-beacon" aria-hidden="true"><span></span></div>
-    <div class="status-copy">
-      <p class="eyebrow">Live status</p>
-      <h2>{{ operatorStatus.title }}</h2>
-      <p>{{ operatorStatus.detail }}</p>
+  <section class="receiver-console" aria-label="Receiver controls">
+    <div class="operator-status" [attr.data-state]="operatorStateKey" aria-live="polite" aria-atomic="true">
+      <div class="status-beacon" aria-hidden="true"><span></span></div>
+      <div class="status-copy">
+        <h2>{{ operatorStatus.title }}</h2>
+        <p>{{ operatorStatus.detail }}</p>
+      </div>
+      @if (isListening) {
+        <dl class="status-facts">
+          <div><dt>Tone</dt><dd>{{ lockedFrequency }}</dd></div>
+          <div><dt>Signal</dt><dd>{{ signalQuality }}</dd></div>
+          <div><dt>Speed</dt><dd>{{ characterSpeed }}</dd></div>
+          <div><dt>Text</dt><dd>{{ decodeQuality }}</dd></div>
+        </dl>
+      }
+      @if (hasActionableLockGuidance) {
+        <p class="lock-guidance" [class.manual]="lockMode === 'manual'">{{ lockGuidance }}</p>
+      }
     </div>
-    <dl class="status-facts">
-      <div><dt>Tone</dt><dd>{{ lockedFrequency }}</dd></div>
-      <div><dt>Signal</dt><dd>{{ signalQuality }}</dd></div>
-      <div><dt>Speed</dt><dd>{{ characterSpeed }}</dd></div>
-      <div><dt>Text</dt><dd>{{ decodeQuality }}</dd></div>
-    </dl>
-    @if (hasActionableLockGuidance) {
-      <p class="lock-guidance" [class.manual]="lockMode === 'manual'">{{ lockGuidance }}</p>
-    }
-  </section>
 
-  <section class="control-panel" aria-label="Listening controls">
     <div class="control-main">
       <div class="field device-field">
-        <label for="input-device">Microphone</label>
+        <label for="input-device">Input</label>
         <select id="input-device" [(ngModel)]="selectedDeviceId" (ngModelChange)="saveSettings()" [disabled]="isListening || isBusy || !captureSupported">
           <option value="">{{ devices.length ? 'System default' : 'No input listed yet' }}</option>
           @for (device of devices; track device) {
@@ -50,7 +48,7 @@
     </div>
 
     <details class="advanced-settings">
-      <summary><span>Signal settings</span><small>Automatic works for most CW</small></summary>
+      <summary><span>Signal settings</span><small>Automatic by default</small></summary>
       <div class="advanced-body">
         <div class="advanced-grid">
           <div class="field">
@@ -97,30 +95,30 @@
             </div>
           </div>
         }
-        <p class="processing-note">Voice processing is disabled where possible; signal filtering remains local.</p>
+        <p class="processing-note">Audio processing stays on this device.</p>
       </div>
     </details>
   </section>
 
   @if (liveCopyActive) {
     <section class="transcript" aria-live="polite">
-      <div class="section-heading"><div><p class="eyebrow">Live-copy focus</p><h2>Decoder evidence is hidden</h2></div></div>
-      <p class="raw-note">Finish or cancel your copy to reveal immutable raw text, context, character evidence, and the timing timeline.</p>
+      <div class="section-heading"><div><p class="eyebrow">Live copy</p><h2>Decoder evidence is hidden</h2></div></div>
+      <p class="raw-note">Finish or cancel to reveal the raw transcript and signal evidence.</p>
     </section>
   }
 
   @if (!liveCopyActive) {
     <section class="transcript" aria-label="Raw transcription results">
       <div class="section-heading">
-        <div><p class="eyebrow">Raw transcript</p><h2>What the decoder heard</h2></div>
+        <div><p class="eyebrow">Raw · unchanged</p><h2>Transcript</h2></div>
         <span class="tone-pill" [class.active]="snapshot.toneState === 'tone'"><i aria-hidden="true"></i>{{ snapshot.toneState === 'tone' ? 'Tone sounding' : 'Between tones' }}</span>
       </div>
       <output aria-live="polite">{{ snapshot.rawText || 'Waiting for CW…' }}</output>
-      <p class="raw-note">Raw decoder output. “?” marks an unknown Morse pattern.</p>
+      <p class="raw-note">Unknown patterns appear as “?”.</p>
       <details class="character-details">
-        <summary><span>Character confidence</span><small>Inspect recent decoded characters</small></summary>
+        <summary><span>Recent characters</span><small>Confidence and Morse pattern</small></summary>
         <div class="character-section">
-          <div class="subheading"><h3>Recent characters</h3><span>Choose a character to inspect it</span></div>
+          <div class="subheading"><h3>Character evidence</h3><span>Choose one to inspect</span></div>
           @if (recentCharacters.length) {
             <div class="character-stream">
               @for (item of recentCharacters; track item.index) {
@@ -151,13 +149,12 @@
 
   <section class="operator-tools" aria-labelledby="operator-tools-title">
     <div class="tools-heading">
-      <div><p class="eyebrow">When you need more</p><h2 id="operator-tools-title">Operator tools</h2></div>
-      <p>Copy, inspect, save, or test without crowding the live transcript.</p>
+      <h2 id="operator-tools-title">Tools</h2>
     </div>
 
     <div class="tool-list">
       <details class="operator-tool">
-        <summary><span><strong>Copy without hints</strong><small>Hide decoder evidence while you copy</small></span></summary>
+        <summary><span><strong>Live copy</strong><small>Practice without hints</small></span></summary>
         <app-live-copy
           [rawText]="snapshot.rawText"
           [characters]="snapshot.characters"
@@ -234,7 +231,7 @@
       }
 
       <details class="operator-tool">
-        <summary><span><strong>Test & calibrate</strong><small>Self-test, audio files, microphone, and speakers</small></span></summary>
+        <summary><span><strong>Test receiver</strong><small>Files, microphone, and speakers</small></span></summary>
         <app-verification
           [inputDevices]="devices"
           [preferredDeviceId]="selectedDeviceId"
@@ -250,5 +247,5 @@
     </div>
   </section>
 
-  <footer><span>Decoder self-check</span><code>{{ syntheticCheck }}</code><small>Expected: CQ CQ DE K6RHE</small></footer>
+  <footer><span>Decoder check</span><code>{{ syntheticCheck }}</code></footer>
 </main>

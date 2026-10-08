@@ -2,6 +2,8 @@
 
 Status: **M9–M11 and M13 complete; M12 software implementation complete with licensed recording validation pending**. The shared timeline, course/progression/persistence foundation, cancellable browser audio, learner routes, adaptive review, groups, words, simulated radio formats, free copy, local recording practice, live receiver-copy bridge, and straight-key fundamentals are implemented without changing the verified M1–M8 transcription baseline.
 
+Practice-hub design follow-up (2026-10-07): the default `/learn` surface now treats character training as the one recommended next action, folds course position and speed into that action card, and presents the seven specialized modes as a responsive three-column desktop/two-column phone grid. Repeated product and section introductions were removed; expanded practice routes retain the guidance needed for their specific interaction, consent, and error states. No learning state machine, scoring, progression, audio, storage, or input behavior changed. All 167 tests, the warning-free 536.04 kB initial build, cache-v25 offline routes, and responsive browser review pass.
+
 ## Product intent
 
 Morse Learning is a first-class, local-first part of the app, inspired by the quick listen/type/feedback loop of Monkey Morse without depending on Monkeytype code or services. The goal is to teach recognition of a character as an audible rhythm and then carry that skill into ordinary CW traffic.
@@ -443,6 +445,8 @@ Acceptance: at 20 WPM, the deterministic 180/60/180 ms marks with 60 ms internal
 Implemented 2026-10-04: `keying-analysis.ts` provides deterministic browser-free scoring, `keying-sidetone.service.ts` owns the press-and-hold Web Audio edge, and the lazy `/learn/keying` route provides the learner surface. Six new checks bring the full suite to 157 passing tests; the RF benchmark, warning-free 476.07 kB initial production build, and cache-v12 direct offline keying route gate pass.
 
 Keying interaction follow-up (2026-10-04): each release schedules automatic feedback after the standard three-dit character gap at the selected speed. The next mark cancels that check. After feedback, keying begins a fresh attempt without clicking Try again. Finish now remains an optional fallback. Clear, settings changes, and route exit cancel the timer; the injected scheduler keeps the route acceptance deterministic.
+
+Mobile touch follow-up (2026-10-07): `/learn/keying` uses a keying-specific narrow layout so method, target, speed, ideal playback, and a large full-width press-and-hold key appear in a compact phone flow. Controls honor coarse-pointer sizing and device safe areas; the native paddle dialog expands to the dynamic mobile viewport. Straight-key pointer input captures the primary contact and ignores non-matching releases, preventing multi-touch from shortening a mark. The Space-key, paddle, analysis, audio, and transient-data contracts are unchanged. A route test protects pointer ownership; all 167 ChromeHeadless tests, the warning-free 532.10 kB initial build, cache-v24 offline route gate, and desktop/390×844 reviews pass.
 
 ### M14 — USB keyboard paddle practice
 

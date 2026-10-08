@@ -55,9 +55,10 @@ export class KeyingPracticePageComponent implements OnDestroy {
   strokes: KeyingStroke[] = [];
   result: KeyingAttemptResult | null = null;
   keyIsDown = false;
-  status = 'Hold Space or the on-screen key for each mark.';
+  status = 'Touch and hold the key, or hold Space, for each mark.';
   audioError = '';
   private downAtMs: number | null = null;
+  private activePointerId: number | null = null;
   private autoCheckHandle: unknown | null = null;
   private autoAdvanceHandle: unknown | null = null;
   inputMode: 'straight' | 'paddle' = 'straight';
@@ -211,8 +212,19 @@ export class KeyingPracticePageComponent implements OnDestroy {
   beginKeying(event?: Event): void {
     event?.preventDefault();
     if (this.keyIsDown) return;
-    this.cancelAutomaticCheck();
     if (this.result) this.clearAttempt();
+    if (event instanceof PointerEvent) {
+      if (!event.isPrimary || this.activePointerId !== null) return;
+      this.activePointerId = event.pointerId;
+      if (event.currentTarget instanceof HTMLElement) {
+        try {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        } catch {
+          // Synthetic events and an already-ended contact may not be capturable.
+        }
+      }
+    }
+    this.cancelAutomaticCheck();
     this.audio.cancel();
     this.audioError = '';
     this.keyIsDown = true;
@@ -230,6 +242,7 @@ export class KeyingPracticePageComponent implements OnDestroy {
     this.strokes = [...this.strokes, { downAtMs: this.downAtMs, upAtMs }];
     this.keyIsDown = false;
     this.downAtMs = null;
+    this.activePointerId = null;
     this.sidetone.stop();
     this.status = `${this.strokes.length} mark${this.strokes.length === 1 ? '' : 's'} sent. Pause when the character is complete.`;
     this.scheduleAutomaticCheck();
@@ -254,9 +267,10 @@ export class KeyingPracticePageComponent implements OnDestroy {
     this.sidetone.stop();
     this.keyIsDown = false;
     this.downAtMs = null;
+    this.activePointerId = null;
     this.strokes = [];
     this.result = null;
-    this.status = 'Hold Space or the on-screen key for each mark.';
+    this.status = 'Touch and hold the key, or hold Space, for each mark.';
   }
 
   nextCharacter(): void {
@@ -346,6 +360,7 @@ export class KeyingPracticePageComponent implements OnDestroy {
       return;
     }
     if (event.code !== 'Space') return;
+    if (this.activePointerId !== null) return;
     event.preventDefault();
     this.releaseKey();
   }
@@ -379,6 +394,7 @@ export class KeyingPracticePageComponent implements OnDestroy {
   @HostListener('window:pointercancel', ['$event'])
   handlePointerRelease(event: PointerEvent): void {
     if (this.inputMode === 'paddle') return;
+    if (this.activePointerId === null || event.pointerId !== this.activePointerId) return;
     this.releaseKey(event);
   }
 
@@ -408,6 +424,7 @@ export class KeyingPracticePageComponent implements OnDestroy {
     this.sidetone.stop();
     this.keyIsDown = false;
     this.downAtMs = null;
+    this.activePointerId = null;
     this.audio.cancel();
     void this.sidetone.dispose();
   }

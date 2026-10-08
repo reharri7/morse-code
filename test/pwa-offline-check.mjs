@@ -103,12 +103,12 @@ try {
   console.log('offline-check: learning route reload complete');
   const learning = await evaluate(cdp, `({
     heading: document.querySelector('h1')?.textContent?.trim(),
-    hasSetup: document.body.textContent.includes('Start character practice'),
-    hasProgress: document.body.textContent.includes('View progress'),
+    hasSetup: document.body.textContent.includes('Start practice'),
+    hasProgress: document.body.textContent.includes('Progress'),
     retainedSpeed: document.body.textContent.includes('20 / 10 WPM'),
     controlled: Boolean(navigator.serviceWorker?.controller)
   })`);
-  if (learning.heading !== 'Practice Morse' || !learning.hasSetup || !learning.hasProgress ||
+  if (learning.heading !== 'Character practice' || !learning.hasSetup || !learning.hasProgress ||
       !learning.retainedSpeed || !learning.controlled) {
     throw new Error(`Offline learning route check failed: ${JSON.stringify(learning)}`);
   }
@@ -183,7 +183,7 @@ try {
       controlled: Boolean(navigator.serviceWorker?.controller)
     };
   })()`);
-  if (offline.title !== 'Transcribe — CW Transcriber' || offline.heading !== 'Live transcription' || !offline.hasDecoder ||
+  if (offline.title !== 'Transcribe — CW Transcriber' || offline.heading !== 'Copy CW' || !offline.hasDecoder ||
       !offline.hasVerification || !offline.hasAcousticTest || !offline.quickVerificationPassed ||
       !offline.retainedSession || !offline.retainedManualPitch) {
     throw new Error(`Offline reload check failed: ${JSON.stringify(offline)}`);

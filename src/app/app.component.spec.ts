@@ -25,7 +25,7 @@ describe('AppComponent routing shell', () => {
 
     expect(router.url).toBe('/transcribe');
     expect(fixture.nativeElement.textContent).toContain('Start listening');
-    expect(fixture.nativeElement.textContent).toContain('What the decoder heard');
+    expect(fixture.nativeElement.textContent).toContain('Transcript');
   });
 
   it('offers first-class receive and practice navigation', async () => {
@@ -34,7 +34,7 @@ describe('AppComponent routing shell', () => {
     fixture.detectChanges();
 
     expect(router.url).toBe('/learn');
-    expect(fixture.nativeElement.textContent).toContain('Practice Morse');
+    expect(fixture.nativeElement.textContent).toContain('Character practice');
     expect(fixture.nativeElement.querySelector('nav a.active')?.textContent).toContain('Practice');
   });
 });

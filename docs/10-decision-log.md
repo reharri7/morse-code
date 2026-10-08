@@ -2,6 +2,22 @@
 
 Add new entries at the top. Record decisions that would otherwise make a future session revisit product or architecture debate. Include date, decision, rationale, consequences, and any revisitation trigger.
 
+## 2026-10-07 — Default surfaces prioritize the operator's next action
+
+**Decision:** Reduce the default Receive and Practice surfaces to a single task hierarchy. Receive combines state, input, and the relevant Start/Stop action into one console; hides live metrics until capture is active; keeps the immutable transcript dominant; and presents five secondary tools as a compact disclosure grid. Practice presents character training as the one recommended action and the seven specialized modes as a responsive three-column/two-column grid. Remove repeated section headings and explanatory copy while retaining labels at raw-data, privacy, consent, and recovery boundaries.
+
+**Rationale:** The underlying progressive disclosure was correct, but the screens still narrated their own structure: Receive repeated page, live-status, transcript, and tool introductions, while Practice repeated its product name before a long menu. The repetition made a capable local-first application feel like a feature inventory. A stronger visual hierarchy lets the operator scan state → act → read, and lets the learner start or choose a mode without reading setup prose.
+
+**Consequences:** No DSP, raw-transcript, uncertainty, context, scoring, progression, storage, audio, or permission behavior changes. Expanded tools and practice routes retain their specialized guidance. Responsive browser review covers 1440×1000, the default narrow viewport, and keying at 390×844 with no horizontal overflow. All 167 ChromeHeadless tests, the unchanged RF gate, a warning-free 536.04 kB initial build, and cache-v25 direct server-offline routes pass. Reintroduce default-surface guidance only when usability evidence identifies a specific missed action or misunderstood state.
+
+## 2026-10-07 — Mobile keying treats touch as a held contact, not a tap action
+
+**Decision:** Make touch the primary narrow-screen presentation of the existing straight-key mode. Keep method selection full width, place character and speed side by side, compress explanatory copy, use safe-area and coarse-pointer sizing, and scale the key against the dynamic viewport. Capture the primary pointer when a mark begins and accept only its matching release; retain Space-key input and the separate focused paddle workflow.
+
+**Rationale:** The previous page was technically touch-capable, but its desktop spacing placed most of the 156 px key below the initial 390×844 view and labeled touch as a secondary alternative to Space. Window-wide release handling also allowed an unrelated pointer-up to end a held mark. A visible thumb-sized surface and contact ownership make the interaction legible and reliable without inventing another keying or scoring path.
+
+**Consequences:** The change is confined to the learning presentation/input edge. Morse analysis, ideal timing, sidetone ownership, transient traces, listening progress, DSP, and raw transcripts do not change. One route check covers mismatched and matching pointer releases; all 167 tests, the warning-free 532.10 kB initial build, cache-v24 offline routes, and 1440×1000/390×844 browser reviews pass. Revisit haptic feedback or an installable native wrapper only after real phone use shows the browser surface needs it.
+
 ## 2026-10-06 — Angular 22 is the supported application baseline
 
 **Decision:** Upgrade sequentially from Angular 19.2 through 20 and 21 to Angular 22.2 with the official migrations. Adopt TypeScript 6.0 and the current `@angular/build` builders, preserve pre-v22 component behavior with explicit eager change detection, convert templates to built-in control flow, and standardize local development on Node 24.15 through `.nvmrc` plus the package engine constraint.

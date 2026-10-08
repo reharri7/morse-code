@@ -111,11 +111,11 @@ describe('M9D learning routes', () => {
     await navigate('/learn');
     const text = fixture.nativeElement.textContent;
 
-    expect(text).toContain('Random groups');
+    expect(text).toContain('Groups');
     expect(text).toContain('Words');
     expect(text).toContain('Callsigns');
-    expect(text).toContain('Contest copy');
-    expect(text).toContain('Simulated QSO');
+    expect(text).toContain('Contest');
+    expect(text).toContain('QSO');
     expect(text).toContain('Free copy');
     expect(text).toContain('Sending');
     expect(text).not.toContain('Practice stays on this device');
@@ -124,7 +124,7 @@ describe('M9D learning routes', () => {
   it('starts the recommended character drill from the home page in one action', async () => {
     await navigate('/learn');
     fixture.debugElement.queryAll(By.css('button'))
-      .find((button) => button.nativeElement.textContent.includes('Start character practice'))
+      .find((button) => button.nativeElement.textContent.includes('Start practice'))
       ?.triggerEventHandler('click');
     await fixture.whenStable();
     fixture.detectChanges();
@@ -137,7 +137,7 @@ describe('M9D learning routes', () => {
   it('starts a selected copy mode directly from the practice menu', async () => {
     await navigate('/learn');
     fixture.debugElement.queryAll(By.css('.practice-option'))
-      .find((option) => option.nativeElement.textContent.includes('Random groups'))
+      .find((option) => option.nativeElement.textContent.includes('Groups'))
       ?.triggerEventHandler('click');
     await fixture.whenStable();
     fixture.detectChanges();
@@ -185,6 +185,49 @@ describe('M9D learning routes', () => {
     expect(fixture.nativeElement.textContent).toContain('Clean copy');
     expect(fixture.nativeElement.textContent).toContain('100%');
     expect(fixture.nativeElement.textContent).toContain('Reads as');
+  });
+
+  it('keeps a touch mark held until the matching primary contact ends', async () => {
+    await navigate('/learn/keying');
+    const page = fixture.debugElement.query(By.directive(KeyingPracticePageComponent))
+      .componentInstance as KeyingPracticePageComponent;
+    const key: HTMLButtonElement = fixture.nativeElement.querySelector('.keying-pad');
+
+    keyingNow = 0;
+    key.dispatchEvent(new PointerEvent('pointerdown', {
+      pointerId: 7, isPrimary: true, bubbles: true, cancelable: true
+    }));
+    keyingNow = 40;
+    window.dispatchEvent(new PointerEvent('pointerup', {
+      pointerId: 8, isPrimary: false, bubbles: true, cancelable: true
+    }));
+
+    expect(page.keyIsDown).toBeTrue();
+    expect(page.strokes.length).toBe(0);
+
+    keyingNow = 60;
+    window.dispatchEvent(new PointerEvent('pointerup', {
+      pointerId: 7, isPrimary: true, bubbles: true, cancelable: true
+    }));
+    fixture.detectChanges();
+
+    expect(page.keyIsDown).toBeFalse();
+    expect(page.strokes).toEqual([{ downAtMs: 0, upAtMs: 60 }]);
+    expect(key.textContent).toContain('PRESS & HOLD');
+
+    keyingScheduler.flush();
+    keyingNow = 100;
+    key.dispatchEvent(new PointerEvent('pointerdown', {
+      pointerId: 9, isPrimary: true, bubbles: true, cancelable: true
+    }));
+    keyingNow = 160;
+    window.dispatchEvent(new PointerEvent('pointerup', {
+      pointerId: 9, isPrimary: true, bubbles: true, cancelable: true
+    }));
+
+    expect(page.keyIsDown).toBeFalse();
+    expect(page.result).toBeNull();
+    expect(page.strokes).toEqual([{ downAtMs: 100, upAtMs: 160 }]);
   });
 
   it('learns distinct paddle contacts on release and finishes a released dit', async () => {

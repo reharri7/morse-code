@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cw-transcriber-shell-v23';
+const CACHE_NAME = 'cw-transcriber-shell-v25';
 const REQUIRED_ASSETS = ['./', './index.html', './manifest.webmanifest', './cw-audio-processor.js', './icons/cw-icon-192.png', './icons/cw-icon-512.png'];
 
 self.addEventListener('install', (event) => {

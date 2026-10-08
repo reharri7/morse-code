@@ -6,7 +6,7 @@
 }
 
 * { box-sizing: border-box; }
-.learn-page { margin: 0 auto; max-width: 980px; padding: clamp(3rem, 7vw, 5.5rem) 1.5rem 6rem; }
+.learn-page { margin: 0 auto; max-width: 980px; padding: clamp(2.4rem, 5vw, 4rem) 1.5rem 6rem; }
 .learn-page.narrow { max-width: 720px; }
 .eyebrow { color: var(--signal); font-size: .68rem; font-weight: 700; letter-spacing: .11em; margin: 0; text-transform: uppercase; }
 h1 { font-size: clamp(2.65rem, 6vw, 4.45rem); font-weight: 600; letter-spacing: -.045em; line-height: .98; margin: .65rem 0 1.1rem; }
@@ -37,18 +37,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .text-link { color: var(--muted); font-size: .78rem; font-weight: 650; padding: .65rem .25rem; text-decoration: none; }
 .text-link:hover { color: var(--ink); }
 
-.practice-summary { border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; margin-top: 2.4rem; padding: .9rem 0; }
-.practice-summary span { color: var(--quiet); font-size: .74rem; }
-.practice-summary strong { color: var(--ink); font-weight: 650; }
-.current-set { border-bottom: 1px solid var(--line); padding: 1rem 0; }
+.practice-hero { align-items: end; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 1.5rem; grid-template-columns: 1fr auto; padding: clamp(1.25rem, 3vw, 1.8rem); }
+.practice-hero h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); margin: .5rem 0 .65rem; }
+.practice-hero-copy > p:last-child { color: var(--quiet); font-size: .76rem; margin: 0; }
+.practice-hero .hero-actions { justify-content: flex-end; margin: 0; }
+.current-set { border-bottom: 1px solid var(--line); padding: .85rem .2rem; }
 .current-set summary { color: var(--muted); cursor: pointer; font-size: .78rem; font-weight: 650; }
 .current-set p { font-size: .78rem; margin-bottom: .2rem; }
-.practice-library { margin-top: 2.8rem; }
-.practice-menu { border-left: 1px solid var(--line); border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(2, 1fr); margin-top: 1rem; }
-.practice-option { align-items: center; background: transparent; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; border-right: 1px solid var(--line); display: flex; justify-content: space-between; min-height: 76px; padding: .9rem 1rem; text-align: left; text-decoration: none; width: 100%; }
+.practice-library { margin-top: 2.1rem; }
+.practice-library h2 { font-size: 1rem; margin: 0; }
+.practice-menu { display: grid; gap: .65rem; grid-template-columns: repeat(3, 1fr); margin-top: .8rem; }
+.practice-option { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; display: flex; justify-content: space-between; min-height: 78px; padding: .8rem .9rem; text-align: left; text-decoration: none; width: 100%; }
 .practice-option:hover { background: #1d211c; }
 .practice-option > span:first-child { display: grid; gap: .2rem; }
-.practice-option strong { color: var(--ink); font-size: .86rem; font-weight: 650; }
+.practice-option strong { color: var(--ink); font-size: .84rem; font-weight: 650; }
 .practice-option small { color: var(--quiet); font-size: .7rem; font-weight: 400; }
 .practice-option > span:last-child { color: var(--signal); font-size: 1rem; }
 
@@ -104,7 +106,7 @@ audio { margin: .75rem 0; max-width: 100%; width: 100%; }
 .keying-target { font: 600 clamp(4rem, 16vw, 7.5rem)/.85 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 1.2rem 0 .8rem; }
 .keying-pattern { color: var(--signal); font: 600 clamp(1.8rem, 7vw, 3rem)/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .2em; margin: 0; }
 .keying-spoken { color: var(--quiet); font-size: .75rem; margin: .55rem 0 1.1rem; text-transform: uppercase; }
-.keying-pad { align-items: center; background: var(--surface-deep); border-color: var(--line-strong); display: flex; flex-direction: column; gap: .45rem; height: 156px; justify-content: center; margin: 2rem auto 1rem; touch-action: none; user-select: none; width: min(100%, 360px); }
+.keying-pad { -webkit-touch-callout: none; align-items: center; background: var(--surface-deep); border-color: var(--line-strong); display: flex; flex-direction: column; gap: .45rem; height: 156px; justify-content: center; margin: 2rem auto 1rem; touch-action: none; user-select: none; width: min(100%, 360px); }
 .keying-pad strong { color: var(--signal); font: 700 1.08rem ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
 .keying-pad span { color: var(--quiet); font-size: .72rem; }
 .keying-pad.active { background: var(--signal); border-color: var(--signal); }
@@ -137,15 +139,43 @@ audio { margin: .75rem 0; max-width: 100%; width: 100%; }
 .paddle-setup-prompt { padding: 2rem 0; text-align: center; }
 
 @media (max-width: 700px) {
-  .learn-page { padding: 2.5rem 1.15rem 4rem; }
+  .learn-page { padding: 1.5rem 1rem 4rem; }
+  .practice-hero { align-items: start; grid-template-columns: 1fr; }
+  .practice-hero h1 { font-size: 2.35rem; }
+  .practice-hero .hero-actions { justify-content: flex-start; }
+  .practice-hero .hero-actions .primary { flex: 1 1 100%; }
   .metric-grid { grid-template-columns: 1fr; }
   .metric-card + .metric-card { border-left: 0; border-top: 1px solid var(--line); }
   .settings-grid, .intro-grid { grid-template-columns: 1fr; }
   .keying-result-grid { grid-template-columns: repeat(2, 1fr); }
   .progress-table th:nth-child(4), .progress-table td:nth-child(4) { display: none; }
-  .practice-menu { grid-template-columns: 1fr; }
+  .practice-menu { grid-template-columns: 1fr 1fr; }
+  .practice-option { min-height: 86px; }
+  .practice-option > span:last-child { display: none; }
   .paddle-dialog-settings { grid-template-columns: 1fr 1fr; }
   .paddle-dialog-settings button { grid-column: 1 / -1; }
+
+  .keying-page { padding: 1.25rem 1rem calc(2.5rem + env(safe-area-inset-bottom)); }
+  .keying-page h1 { font-size: clamp(2.2rem, 11vw, 3rem); margin: .45rem 0 .75rem; }
+  .keying-page .lead { font-size: .94rem; line-height: 1.48; }
+  .keying-controls { margin-top: 1.25rem; padding-top: 1rem; }
+  .keying-controls .settings-grid { gap: .8rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .keying-controls .field small { display: none; }
+  .keying-input-field { margin-bottom: .8rem; }
+  .keying-stage { margin-top: 1.25rem; padding-top: 1rem; }
+  .keying-target { font-size: clamp(3.25rem, 18vw, 4.5rem); margin: .65rem 0 .45rem; }
+  .keying-pattern { font-size: clamp(1.65rem, 8vw, 2.35rem); }
+  .keying-spoken { margin: .4rem 0 .75rem; }
+  .keying-pad { height: clamp(176px, 21dvh, 210px); margin: .8rem auto .75rem; width: 100%; }
+  .keying-pad strong { font-size: 1.18rem; }
+  .sent-readout { margin-top: 1rem; max-width: none; }
+  .keying-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .keying-actions button { width: 100%; }
+  .paddle-dialog { border-left: 0; border-right: 0; max-height: 100dvh; padding: 1rem; width: 100vw; }
+}
+
+@media (pointer: coarse) {
+  a.button, button, input, select { min-height: 48px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
